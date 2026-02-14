@@ -27,6 +27,7 @@
 
 - `frontend/` - Vue 前端專案
 - `backend/` - .NET 後端專案
+- `collector/` - .NET Console App（收值 / C# 練習）
 - `tests/` - 測試檔案
 
 ## 常用指令
@@ -42,6 +43,12 @@ npm run dev
 ```bash
 cd backend
 dotnet restore
+dotnet run
+```
+
+### Collector
+```bash
+cd collector
 dotnet run
 ```
 
