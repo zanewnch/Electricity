@@ -1,0 +1,346 @@
+openapi: 3.0.3
+info:
+  title: 電力數據分析 API
+  version: 0.1.0
+  description: 提供感測器數據查詢與時間聚合分析的 RESTful API
+
+servers:
+  - url: http://localhost:5086
+    description: 開發環境 (HTTP)
+  - url: https://localhost:7105
+    description: 開發環境 (HTTPS)
+
+paths:
+  /api/sensor-data:
+    get:
+      summary: 查詢原始感測器資料
+      description: 支援依裝置類型、時間範圍篩選，並提供分頁。
+      operationId: listSensorData
+      parameters:
+        - name: deviceType
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [EnergyMeter, Modbus]
+          description: 依裝置類型篩選
+        - name: bleAddress
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 依裝置 MAC 位址篩選
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: 起始時間（ISO 8601）
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: 結束時間（ISO 8601）
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: 頁碼（從 1 開始）
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+          description: 每頁筆數
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedSensorDataResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/sensor-data/{id}:
+    get:
+      summary: 取得單筆感測器資料
+      operationId: getSensorDataById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: SensorData 主鍵
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorData'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/sensor-data/latest:
+    get:
+      summary: 取得各裝置最新一筆資料
+      description: 依 BleAddress 分組，回傳每台裝置的最新量測值。用於 Dashboard 即時卡片。
+      operationId: getLatestSensorData
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SensorData'
+
+  /api/sensor-data/aggregate:
+    get:
+      summary: 時間聚合查詢
+      description: |
+        依指定時間粒度（minute/hour/day/month）對感測器數據進行聚合，
+        回傳各時間段的統計值。用於驗證不同粒度的用電趨勢分析意義。
+      operationId: aggregateSensorData
+      parameters:
+        - name: granularity
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [minute, hour, day, month]
+          description: 聚合時間粒度
+        - name: deviceType
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [EnergyMeter, Modbus]
+          description: 依裝置類型篩選
+        - name: bleAddress
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 依裝置 MAC 位址篩選
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: 起始時間（ISO 8601）
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: 結束時間（ISO 8601）
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AggregateResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  schemas:
+    SensorData:
+      type: object
+      required:
+        - id
+        - deviceType
+        - bleAddress
+        - current
+        - voltage
+        - watt
+        - timestamp
+      properties:
+        id:
+          type: integer
+          description: 主鍵
+          example: 1
+        deviceType:
+          type: string
+          description: 裝置類型
+          example: EnergyMeter
+        bleAddress:
+          type: string
+          description: 裝置 BLE MAC 位址
+          example: B0:C4:11:22:33:01
+        current:
+          type: number
+          format: double
+          description: 電流 (A)
+          example: 45.23
+        voltage:
+          type: number
+          format: double
+          description: 電壓 (V)
+          example: 219.87
+        watt:
+          type: number
+          format: double
+          description: 功率 (W)
+          example: 9943.12
+        powerFactor:
+          type: number
+          format: double
+          nullable: true
+          description: 功率因數（僅 EnergyMeter）
+          example: 0.92
+        frequency:
+          type: number
+          format: double
+          nullable: true
+          description: 頻率 Hz（僅 EnergyMeter）
+          example: 60.01
+        timestamp:
+          type: string
+          format: date-time
+          description: 量測時間
+          example: "2026-02-24T10:00:00"
+
+    PagedSensorDataResult:
+      type: object
+      required:
+        - total
+        - page
+        - pageSize
+        - data
+      properties:
+        total:
+          type: integer
+          description: 符合條件的總筆數
+          example: 1000
+        page:
+          type: integer
+          description: 目前頁碼
+          example: 1
+        pageSize:
+          type: integer
+          description: 每頁筆數
+          example: 50
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SensorData'
+
+    AggregatePoint:
+      type: object
+      required:
+        - period
+        - avgCurrent
+        - avgVoltage
+        - avgWatt
+        - maxWatt
+        - minWatt
+        - sumWatt
+        - count
+      properties:
+        period:
+          type: string
+          description: 時間段識別（格式依 granularity 而異）
+          example: "2026-02-24T10:00:00"
+        avgCurrent:
+          type: number
+          format: double
+          example: 42.10
+        avgVoltage:
+          type: number
+          format: double
+          example: 219.80
+        avgWatt:
+          type: number
+          format: double
+          example: 9252.38
+        maxWatt:
+          type: number
+          format: double
+          example: 21890.00
+        minWatt:
+          type: number
+          format: double
+          example: 100.50
+        sumWatt:
+          type: number
+          format: double
+          example: 33308.57
+        avgPowerFactor:
+          type: number
+          format: double
+          nullable: true
+          example: 0.91
+        count:
+          type: integer
+          description: 該時間段的資料筆數
+          example: 1028
+
+    AggregateResult:
+      type: object
+      required:
+        - granularity
+        - data
+      properties:
+        granularity:
+          type: string
+          enum: [minute, hour, day, month]
+          example: hour
+        deviceType:
+          type: string
+          nullable: true
+          example: EnergyMeter
+        from:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2026-02-24T00:00:00"
+        to:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2026-02-24T23:59:59"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AggregatePoint'
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: 錯誤說明
+          example: "granularity 參數無效，請使用 minute / hour / day / month"
+
+  responses:
+    BadRequest:
+      description: 請求參數錯誤
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: 資源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
