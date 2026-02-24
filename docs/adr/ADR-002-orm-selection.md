@@ -1,4 +1,4 @@
-# ADR-002: 選用 Entity Framework Core 作為 ORM
+# ADR-002: Adopt Entity Framework Core as the ORM
 
 ## Status
 
@@ -6,28 +6,28 @@ Accepted
 
 ## Context
 
-後端需要一個資料存取層來操作 SQL Server 資料庫。主要候選方案為 Entity Framework Core（全功能 ORM）和 Dapper（輕量 Micro-ORM）。系統需要 Migration 管理 Schema 變更，且 Collector 與 Backend 需共用同一個 DbContext。
+The backend needs a data access layer to interact with the SQL Server database. The two main candidates were Entity Framework Core (full-featured ORM) and Dapper (lightweight micro-ORM). The system requires migration-based schema management, and the Collector and Backend need to share the same `DbContext`.
 
 ## Decision
 
-選用 **Entity Framework Core 10.0.3**。
+Adopt **Entity Framework Core 10.0.3**.
 
 ## Consequences
 
 **Positive:**
-- `dotnet ef migrations` 管理 Schema 變更，歷史可追蹤
-- LINQ GroupBy 可直接用於聚合查詢（見 RFC-001）
-- `DbContext` 可在 Collector 和 Backend 間共享（透過 `shared/` 專案）
-- 與 ASP.NET Core DI 原生整合，無需額外設定
+- `dotnet ef migrations` manages schema changes with a traceable history
+- LINQ `GroupBy` can be used directly for aggregation queries (see RFC-001)
+- `DbContext` can be shared between Collector and Backend via the `shared/` project
+- Native integration with ASP.NET Core DI; no additional configuration needed
 
 **Negative:**
-- EF Core 的複雜 GroupBy 有時無法完整翻譯成最優 SQL，需確認生成查詢
-- 若聚合查詢效能不足，需改用 `FromSqlRaw` 補充（見 RFC-001 Option B）
-- 相較 Dapper，效能略低，但對此規模無實際影響
+- Complex EF Core `GroupBy` expressions sometimes cannot be fully translated to optimal SQL; generated queries should be verified
+- If aggregation query performance is insufficient, `FromSqlRaw` may be needed as a fallback (see RFC-001 Option B)
+- Slightly lower performance compared to Dapper, though negligible at this scale
 
-替代方案：
+Alternatives considered:
 
-| 選項 | 捨棄原因 |
-|------|----------|
-| Dapper | 需手寫 SQL；Migration 需額外工具（如 Fluent Migrator） |
-| Raw ADO.NET | 過於繁瑣；容易引入 SQL injection 風險 |
+| Option | Reason Rejected |
+|--------|----------------|
+| Dapper | Requires hand-written SQL; migrations need an additional tool (e.g. Fluent Migrator) |
+| Raw ADO.NET | Too verbose; easy to introduce SQL injection risks |

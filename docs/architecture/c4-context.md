@@ -1,30 +1,30 @@
 # C4 — Context Diagram
 
-系統層級的最高視角，顯示本系統的邊界與外部互動者。
+The highest-level view of the system, showing the system boundary and external actors.
 
 ```mermaid
 C4Context
-    title 電力數據分析系統 — System Context
+    title Electricity Data Analysis System — System Context
 
-    Person(user, "使用者", "透過瀏覽器查看用電數據與趨勢圖表")
+    Person(user, "User", "Views electricity data and trend charts via browser")
 
-    System(electricity, "電力數據分析系統", "收集、儲存並視覺化感測裝置的電力數據")
+    System(electricity, "Electricity Data Analysis System", "Collects, stores, and visualizes electricity data from sensor devices")
 
-    System_Ext(bleDevice, "BLE / MQTT 感測裝置", "真實電力感測器（目前為 dummy data 模擬）")
+    System_Ext(bleDevice, "BLE / MQTT Sensor Device", "Real electricity sensor (currently simulated with dummy data)")
 
-    Rel(user, electricity, "查看 Dashboard 與歷史趨勢", "HTTPS")
-    Rel(bleDevice, electricity, "傳送電力量測數據", "BLE / MQTT（未來）")
+    Rel(user, electricity, "Views Dashboard and historical trends", "HTTPS")
+    Rel(bleDevice, electricity, "Sends electricity measurement data", "BLE / MQTT (future)")
 ```
 
 ---
 
-## 說明
+## Description
 
-| 元素 | 類型 | 說明 |
-|------|------|------|
-| 使用者 | Person | 主要操作者，透過瀏覽器存取系統 |
-| 電力數據分析系統 | System（本系統） | 包含前端、後端 API、資料庫、Collector |
-| BLE / MQTT 感測裝置 | External System | 真實量測裝置，目前以 Collector dummy data 替代 |
+| Element | Type | Description |
+|---------|------|-------------|
+| User | Person | Primary operator, accesses the system via browser |
+| Electricity Data Analysis System | System (this system) | Includes frontend, backend API, database, and Collector |
+| BLE / MQTT Sensor Device | External System | Real measurement device, currently replaced by Collector dummy data |
 
-> 目前 Collector 在本機直接寫入資料庫，不透過 MQTT Broker。
-> 未來若接入真實裝置，會新增 MQTT Broker 作為中介層。
+> Currently, the Collector writes directly to the database locally without going through an MQTT Broker.
+> If real devices are connected in the future, an MQTT Broker will be added as an intermediary layer.

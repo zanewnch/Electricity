@@ -10,23 +10,23 @@ var options = new DbContextOptionsBuilder<MqttDbContext>()
 
 var generator = new DataGenerator();
 
-// 支援 Ctrl+C 優雅退出
+// Support graceful Ctrl+C exit
 using var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) =>
 {
     e.Cancel = true;
     cts.Cancel();
-    Console.WriteLine("\n停止收值...");
+    Console.WriteLine("\nStopping data collection...");
 };
 
-Console.WriteLine("開始產生 dummy data（每 3.5 秒一次，按 Ctrl+C 停止）\n");
+Console.WriteLine("Starting dummy data generation (every 3.5 seconds, press Ctrl+C to stop)\n");
 
 while (!cts.Token.IsCancellationRequested)
 {
     var readings = generator.Generate();
     generator.PrintReadings(readings);
 
-    // 寫入資料庫
+    // Write to database
     using (var db = new MqttDbContext(options))
     {
         db.SensorData.AddRange(readings);

@@ -1,45 +1,45 @@
 # CLAUDE.md
 
-## 專案概述
+## Project Overview
 
-這是一個電力數據分析專案，前端使用 Vue，後端使用 .NET。
+This is an electricity data analysis project with a Vue frontend and a .NET backend.
 
-## 技術棧
+## Tech Stack
 
-### 前端
+### Frontend
 - Vue 3
 - TypeScript
 - Vite
 
-### 後端
-- .NET 10（LTS）
+### Backend
+- .NET 10 (LTS)
 - C#
 - Entity Framework Core
 
-## 開發慣例
+## Development Conventions
 
-- 使用繁體中文撰寫面向使用者的文字與註解
-- 前端遵循 Vue 3 Composition API 風格
-- 後端遵循 .NET 慣例命名規則（PascalCase）
-- API 採用 RESTful 設計
+- Write user-facing text and comments in English
+- Frontend follows Vue 3 Composition API style
+- Backend follows .NET naming conventions (PascalCase)
+- API follows RESTful design
 
-## 目錄結構
+## Directory Structure
 
-- `frontend/` - Vue 前端專案
-- `backend/` - .NET 後端專案
-- `collector/` - .NET Console App（收值 / C# 練習）
-- `tests/` - 測試檔案
+- `frontend/` - Vue frontend project
+- `backend/` - .NET backend project
+- `collector/` - .NET Console App (data collection / C# practice)
+- `tests/` - Test files
 
-## 常用指令
+## Common Commands
 
-### 前端
+### Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### 後端
+### Backend
 ```bash
 cd backend
 dotnet restore
@@ -52,7 +52,7 @@ cd collector
 dotnet run
 ```
 
-## 注意事項
+## Notes
 
-- 敏感設定（連線字串、API 金鑰等）不應提交至版本控制
-- 使用 `.gitignore` 排除 `node_modules/`、`bin/`、`obj/` 等產出目錄
+- Sensitive settings (connection strings, API keys, etc.) should not be committed to version control
+- Use `.gitignore` to exclude `node_modules/`, `bin/`, `obj/`, and other build output directories

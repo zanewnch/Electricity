@@ -3,7 +3,7 @@ using Shared.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 註冊 DbContext
+// Register DbContext
 builder.Services.AddDbContext<MqttDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
