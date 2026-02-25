@@ -9,11 +9,13 @@ Based on [official Claude Code Skills documentation](https://docs.anthropic.com/
 | `name` | string | No | Directory name | Lowercase, hyphens only, max 64 chars. Becomes the `/slash-command`. |
 | `description` | string | Recommended | First paragraph | What the skill does + when to use it. Claude uses this for auto-invocation. |
 | `disable-model-invocation` | boolean | No | `false` | `true` = only user can invoke via `/name`. Claude cannot auto-invoke. |
-| `user-invocable` | boolean | No | `true` | `false` = hidden from `/` menu. Only Claude can auto-invoke. |
-| `model` | string | No | inherit | Model to use: `opus`, `sonnet`, `haiku`, or `inherit`. |
-| `allowed-tools` | string | No | None | Comma-separated tools Claude can use without permission prompts. |
-| `context` | string | No | None | Set to `fork` to run in isolated subagent context. |
-| `agent` | string | No | `general-purpose` | Subagent type when `context: fork`. Options: `Explore`, `Plan`, `general-purpose`. |
+| `user-invokable` | boolean | No | `true` | `false` = hidden from `/` menu. Only Claude can auto-invoke. |
+| `argument-hint` | string | No | None | Hint text shown in the `/` menu for argument format. |
+| `compatibility` | string | No | None | Compatibility metadata. |
+| `license` | string | No | None | License information. |
+| `metadata` | string | No | None | Additional metadata. |
+
+**Note:** Only the above fields are supported. Fields like `model`, `allowed-tools`, `context`, and `agent` are NOT valid skill frontmatter.
 
 ## This Project's Required Frontmatter
 
@@ -24,9 +26,7 @@ Every skill in this project must include:
 name: {skill-name}
 description: {description with natural language trigger phrases}
 disable-model-invocation: false
-user-invocable: true
-model: opus
-allowed-tools: {tools needed}
+user-invokable: true
 ---
 ```
 
@@ -94,5 +94,5 @@ Include natural language phrases users would actually say:
 1. Keep SKILL.md under 500 lines
 2. Referenced config files are loaded on-demand (saves tokens)
 3. No `$ARGUMENTS`, `argument-hint`, or subcommand parsing
-4. Always include `disable-model-invocation: false`, `user-invocable: true`, `model: opus`
+4. Always include `disable-model-invocation: false`, `user-invokable: true`
 5. Fix issues directly in review/update workflows (don't just report)

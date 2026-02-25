@@ -44,19 +44,23 @@ describe('Data Correction Validation Tests', () => {
 
 ## Level 2️⃣ - Phase Blocks
 
-**Location:** Start of each Phase describe block
+**Location:** Inside `beforeAll` at start of each Phase describe block
 
 **Format:**
 ```javascript
 describe('Phase 1: Basic Connection and Table Structure Validation', () => {
-    console.log('\n📍 Phase 1: Basic Connection and Table Structure Validation');
+    beforeAll(() => {
+        console.log('\n📍 Phase 1: Basic Connection and Table Structure Validation');
+    });
 
     it('test case 1', () => { ... });
     it('test case 2', () => { ... });
 });
 
 describe('Phase 2: Data Existence Validation', () => {
-    console.log('\n📍 Phase 2: Data Existence Validation');
+    beforeAll(() => {
+        console.log('\n📍 Phase 2: Data Existence Validation');
+    });
 
     it('test case 1', () => { ... });
 });
