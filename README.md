@@ -1,11 +1,11 @@
 # Electricity
 
-電力數據分析專案，用於分析電力使用數據、用電量統計與趨勢視覺化。
+Electricity data analysis project for analyzing power usage data, consumption statistics, and trend visualization.
 
-## 技術棧
+## Tech Stack
 
-- **前端**：Vue 3 + TypeScript + Vite
-- **後端**：.NET Core + C# + Entity Framework Core
+- **Frontend**: Vue 3 + TypeScript + Vite
+- **Backend**: .NET Core + C# + Entity Framework Core
 
 ## Getting Started
 
@@ -14,7 +14,7 @@
 - Node.js 18+
 - .NET 10 SDK
 
-### 前端
+### Frontend
 
 ```bash
 cd frontend
@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-### 後端
+### Backend
 
 ```bash
 cd backend
@@ -30,7 +30,7 @@ dotnet restore
 dotnet run
 ```
 
-### Collector（Console App）
+### Collector (Console App)
 
 ```bash
 cd collector
@@ -43,9 +43,9 @@ dotnet run
 Electricity/
 ├── README.md
 ├── CLAUDE.md
-├── frontend/          # Vue 3 前端專案
-├── backend/           # .NET Core 後端專案
-└── collector/         # .NET Console App（收值 / C# 練習）
+├── frontend/          # Vue 3 frontend project
+├── backend/           # .NET Core backend project
+└── collector/         # .NET Console App (data collection / C# practice)
 ```
 
 ## License

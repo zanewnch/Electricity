@@ -1,0 +1,6 @@
+{
+  "name": "electricity-docs",
+  "version": "1.0.0",
+  "description": "Documentation writing system for the Electricity project - RFC, ADR, API pecs, test plans",
+  "author": "Electricity Team"
+}

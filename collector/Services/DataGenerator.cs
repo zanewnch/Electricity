@@ -13,7 +13,7 @@ public class DataGenerator
     {
         var readings = new List<SensorData>();
 
-        // Energy Meter：穩定電壓 ~220V、大電流、有 PowerFactor 和 Frequency
+        // Energy Meter: stable voltage ~220V, high current, with PowerFactor and Frequency
         var emCurrent = Math.Round(_random.NextDouble() * 100, 2);
         var emVoltage = Math.Round(218 + _random.NextDouble() * 4, 2);
         readings.Add(new SensorData
@@ -28,7 +28,7 @@ public class DataGenerator
             Timestamp = DateTime.Now
         });
 
-        // Modbus：工業電壓範圍較廣、小電流、無 PowerFactor 和 Frequency
+        // Modbus: wider industrial voltage range, low current, no PowerFactor or Frequency
         var mbCurrent = Math.Round(_random.NextDouble() * 30, 2);
         var mbVoltage = Math.Round(_random.NextDouble() * 480, 2);
         readings.Add(new SensorData
