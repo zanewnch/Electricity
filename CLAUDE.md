@@ -23,34 +23,16 @@
 - 後端遵循 .NET 慣例命名規則（PascalCase）
 - API 採用 RESTful 設計
 
+## AI 助手互動風格
+
+詳見 [`.claude/response-standards.md`](.claude/response-standards.md)
+
 ## 目錄結構
 
 - `frontend/` - Vue 前端專案
 - `backend/` - .NET 後端專案
 - `collector/` - .NET Console App（收值 / C# 練習）
 - `tests/` - 測試檔案
-
-## 常用指令
-
-### 前端
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### 後端
-```bash
-cd backend
-dotnet restore
-dotnet run
-```
-
-### Collector
-```bash
-cd collector
-dotnet run
-```
 
 ## 注意事項
 
