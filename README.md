@@ -30,6 +30,20 @@ dotnet restore
 dotnet run
 ```
 
+#### Development with Auto-Restart
+
+For development, use `dotnet watch` to automatically restart the server when you save changes:
+
+```bash
+dotnet watch run
+```
+
+This will:
+- Watch for file changes
+- Automatically restart the server (1-2 seconds)
+- Apply hot reload when possible for instant updates
+- Perfect for rapid development iteration
+
 ### Collector (Console App)
 
 ```bash

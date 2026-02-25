@@ -27,13 +27,15 @@ This is an electricity data analysis project with a Vue frontend and a .NET back
 
 詳見 [`.claude/response-standards.md`](.claude/response-standards.md)
 
-## 目錄結構
 ## Directory Structure
 
 - `frontend/` - Vue frontend project
 - `backend/` - .NET backend project
 - `collector/` - .NET Console App (data collection / C# practice)
 - `tests/` - Test files
+- `shared/` - Shared models and DbContext
+
+Documentation structure rules are defined in [`.claude/rules/documentation-structure.md`](.claude/rules/documentation-structure.md)
 
 ## 注意事項
 ## Common Commands

@@ -1,238 +1,238 @@
-# Unit Test Skill - 使用範例
+# Unit Test Skill - Usage Examples
 
-## 雙向觸發機制
+## Dual-trigger Mechanism
 
-你可以用 **NLP 自然語言** 或 **手動指令** 兩種方式來觸發這個 skill。
-
----
-
-## 方式 1️⃣：NLP 觸發（自動識別）
-
-### 例子 1：新建 test file
-
-```
-我需要寫一個 data-correction 的 unit test
-```
-
-**Claude 會自動識別這是 scaffold 操作，詢問 spec 路徑**
+You can trigger this skill using **Natural Language** or **Manual Commands** in two ways.
 
 ---
 
-### 例子 2：補充 console.log
+## Method 1️⃣: NLP Trigger (Auto-recognition)
+
+### Example 1: Create new test file
 
 ```
-幫我為現有的 test file 補充 console.log 和顏色
+I need to write a unit test for data-correction
 ```
 
-**Claude 會自動識別這是 enhance 操作，詢問 test file 路徑**
+**Claude will auto-recognize this is a create operation and ask for spec path**
 
 ---
 
-### 例子 3：彩色輸出
+### Example 2: Add console.log
 
 ```
-我希望 emCsvRepo.test.js 能有彩色的 console 輸出
+Help me add console.log and colors to existing test file
 ```
 
-**Claude 會自動識別這是 enhance 操作**
+**Claude will auto-recognize this is an update operation and ask for test file path**
 
 ---
 
-### 例子 4：整合 test
+### Example 3: Colored output
 
 ```
-為我整合這個 test，加上 console.log 和顏色
+I want emCsvRepo.test.js to have colored console output
 ```
 
-**Claude 會自動觸發 enhance**
+**Claude will auto-recognize this is an update operation**
 
 ---
 
-### ✅ NLP 觸發的關鍵詞
+### Example 4: Integrate test
 
 ```
-寫 unit test
-建立 test file
-新增 test
-補充 console.log
-增強 test
-為 test 加顏色
-test 彩色輸出
-整合 test
+Help me integrate this test with console.log and colors
 ```
 
-任何包含這些關鍵詞的自然語言都會自動觸發 skill。
+**Claude will auto-trigger update**
 
 ---
 
-## 方式 2️⃣：手動指令（Argument）
-
-### Scaffold 子指令
-
-新建 test file（根據 spec）：
+### ✅ Keywords for NLP trigger
 
 ```
-/unit-test scaffold be/notes/spec/data-correction
+write unit test
+create test file
+add test
+add console.log
+enhance test
+add color to test
+colored test output
+integrate test
 ```
 
-**執行流程：**
-1. 讀取 `be/notes/spec/data-correction/spec.md`
-2. 提取 description、phases、requirements
-3. 生成 `tests/unit/dataCorrection.test.js`
-4. 自動加入 console.log + ANSI 顏色
+Any natural language containing these keywords will auto-trigger the skill.
 
 ---
 
-### Enhance 子指令
+## Method 2️⃣: Manual Commands (Argument)
 
-補充現有 test file：
+### Create Subcommand
+
+Create new test file (based on spec):
 
 ```
-/unit-test enhance tests/unit/emCsvRepo.test.js
+/unit-test create be/notes/spec/data-correction
 ```
 
-**執行流程：**
-1. 讀取 `tests/unit/emCsvRepo.test.js`
-2. 檢查缺失的：
-   - Colors 常數定義
-   - Main describe 邊框
-   - Phase describe 標記
-   - It block 標記
-   - 結果顏色條件
-3. 補充所有缺失的 console.log + 顏色
-4. 驗證語法正確性
+**Execution flow:**
+1. Read `be/notes/spec/data-correction/spec.md`
+2. Extract description, phases, requirements
+3. Generate `tests/unit/dataCorrection.test.js`
+4. Automatically add console.log + ANSI colors
 
 ---
 
-## 場景對應表
+### Update Subcommand
 
-| 場景 | NLP 說法 | 手動指令 |
-|------|---------|--------|
-| **新建 test** | 「幫我寫 unit test」 | `/unit-test scaffold path` |
-| **補充 log** | 「補充 console.log」 | `/unit-test enhance path` |
-| **加顏色** | 「為 test 加顏色」 | `/unit-test enhance path` |
-| **完整整合** | 「整合這個 test」 | `/unit-test enhance path` |
+Enhance existing test file:
+
+```
+/unit-test update tests/unit/emCsvRepo.test.js
+```
+
+**Execution flow:**
+1. Read `tests/unit/emCsvRepo.test.js`
+2. Check for missing:
+   - Color constants definition
+   - Main describe border
+   - Phase describe markers
+   - It block markers
+   - Result color conditions
+3. Add all missing console.log + colors
+4. Verify syntax correctness
 
 ---
 
-## 實戰例子
+## Scenario Mapping Table
 
-### 場景 1：剛寫好 spec，想自動生成 test file
-
-**你可以說：**
-```
-根據 be/notes/spec/data-correction 的 spec，幫我建立 test file
-```
-
-或者直接用指令：
-```
-/unit-test scaffold be/notes/spec/data-correction
-```
-
-**結果：**
-- 自動生成 `tests/unit/dataCorrection.test.js`
-- 包含 phases 對應的 describe blocks
-- 每個 block 都有格式化的 console.log + ANSI 顏色
+| Scenario | NLP | Manual Command |
+|----------|-----|---|
+| **Create test** | "Help me write unit test" | `/unit-test create path` |
+| **Add logs** | "Add console.log" | `/unit-test update path` |
+| **Add colors** | "Add colors to test" | `/unit-test update path` |
+| **Full integration** | "Integrate this test" | `/unit-test update path` |
 
 ---
 
-### 場景 2：有舊的 test file，想加上 console.log 和顏色
+## Real-world Examples
 
-**你可以說：**
-```
-我的 emCsvRepo.test.js 已經有 colors 定義了，幫我補充缺失的 console.log
-```
+### Scenario 1: Just finished spec, want to auto-generate test file
 
-或者直接用指令：
+**You can say:**
 ```
-/unit-test enhance tests/unit/em/emCsvRepo.test.js
+Based on be/notes/spec/data-correction spec, help me create test file
 ```
 
-**結果：**
-- 檢查是否有 colors 常數（有則保留，無則補上）
-- 補充缺失的 console.log（Main、Phase、It blocks）
-- 補充結果顏色條件（green/red）
-- 不修改現有的正確 console.log
+Or use direct command:
+```
+/unit-test create be/notes/spec/data-correction
+```
+
+**Result:**
+- Auto-generates `tests/unit/dataCorrection.test.js`
+- Includes describe blocks for each phase
+- Each block has formatted console.log + ANSI colors
 
 ---
 
-### 場景 3：現有 test 需要整體改進
+### Scenario 2: Have old test file, want to add console.log and colors
 
-**你可以說：**
+**You can say:**
 ```
-幫我整合 dataCorrection.test.js，加上完整的 console.log 格式和彩色輸出
+My emCsvRepo.test.js already has colors defined, help me add missing console.log
 ```
 
-或者用指令：
+Or use direct command:
 ```
-/unit-test enhance tests/unit/dataCorrection.test.js
+/unit-test update tests/unit/em/emCsvRepo.test.js
 ```
+
+**Result:**
+- Checks for color constants (preserve if exists, add if missing)
+- Adds missing console.log (Main, Phase, It blocks)
+- Adds result color conditions (green/red)
+- Doesn't modify existing correct console.log
 
 ---
 
-## 混合使用
+### Scenario 3: Existing test needs overall improvement
 
-你也可以先用 NLP 說出你的需求，Claude 會幫你確認路徑後執行：
-
+**You can say:**
 ```
-用戶: 我需要為這個 test 加彩色
-      ↓
-Claude: 要加彩色的是哪個 test file？(會列出或讓你輸入路徑)
-      ↓
-用戶: tests/unit/emCsvRepo.test.js
-      ↓
-Claude: 執行 /unit-test enhance tests/unit/em/emCsvRepo.test.js
-      ↓
-結果: ✅ 補充完成
+Help me integrate dataCorrection.test.js with complete console.log format and colored output
+```
+
+Or use command:
+```
+/unit-test update tests/unit/dataCorrection.test.js
 ```
 
 ---
 
-## 最佳實踐
+## Mixed Usage
 
-### ✅ 何時用 NLP
+You can also start with NLP, and Claude will confirm path before executing:
 
-- 你不確定確切的路徑
-- 你想讓 Claude 幫你分析需求
-- 你想要更多互動和確認
-
-### ✅ 何時用手動指令
-
-- 你已經知道確切的路徑
-- 你想快速執行，不需要確認
-- 你習慣用 CLI 風格的指令
+```
+User: I need to add colors to this test
+     ↓
+Claude: Which test file should I add colors to? (lists or prompts for path)
+     ↓
+User: tests/unit/emCsvRepo.test.js
+     ↓
+Claude: Running /unit-test update tests/unit/em/emCsvRepo.test.js
+     ↓
+Result: ✅ Completed
+```
 
 ---
 
-## 進階用法
+## Best Practices
 
-### 同時處理多個 test files
+### ✅ When to use NLP
+
+- You're unsure of exact paths
+- You want Claude to analyze your needs
+- You want more interaction and confirmation
+
+### ✅ When to use manual commands
+
+- You already know exact paths
+- You want quick execution without confirmation
+- You prefer CLI-style commands
+
+---
+
+## Advanced Usage
+
+### Process multiple test files at once
 
 ```
-我想為 tests/unit 底下所有的 test files 都加上彩色輸出
+I want to add colored output to all test files under tests/unit
 ```
 
-Claude 會：
-1. 掃描 `tests/unit` 目錄
-2. 列出所有 `.test.js` 文件
-3. 逐個執行 enhance
-4. 生成完整的修改報告
+Claude will:
+1. Scan `tests/unit` directory
+2. List all `.test.js` files
+3. Execute update for each
+4. Generate complete change report
 
 ---
 
 ## FAQ
 
-**Q: 如果我用 NLP，會自動執行嗎？**
-A: 不會，Claude 會識別你的需求，詢問確認路徑或參數後再執行。
+**Q: Will NLP auto-execute?**
+A: No, Claude will recognize your needs, ask for path/parameter confirmation, then execute.
 
-**Q: 我可以同時用 NLP 和指令混合嗎？**
-A: 可以。你可以先用 NLP 描述需求，再用指令指定具體路徑。
+**Q: Can I mix NLP and commands?**
+A: Yes. You can describe needs with NLP first, then specify exact path with command.
 
-**Q: Scaffold 和 Enhance 有什麼區別？**
+**Q: What's the difference between create and update?**
 A:
-- **Scaffold**：從零開始根據 spec 生成全新 test file
-- **Enhance**：改進現有 test file，補充缺失的 console.log 和顏色
+- **Create**: Generate brand new test file from spec from scratch
+- **Update**: Improve existing test file, add missing console.log and colors
 
-**Q: 如果 test file 已經有 console.log，Enhance 會重複嗎？**
-A: 不會。Enhance 會智能檢測，只補充缺失的部分。
+**Q: Will update duplicate if test file already has console.log?**
+A: No. Update intelligently detects and only adds missing parts.
 

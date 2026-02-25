@@ -1,6 +1,6 @@
-# Spec 輸出格式範例
+# Spec Output Format Example
 
-以下是 spec.md 的標準輸出格式：
+The following is the standard output format for `spec.md`:
 
 ---
 
@@ -8,33 +8,33 @@
 
 ## Overview
 
-**Feature**: {feature 名稱}
-**Component**: {frontend component 名稱}
-**Date**: {建立日期}
+**Feature**: {feature name}
+**Component**: {frontend component name}
+**Date**: {creation date}
 
 ---
 
 ## Frontend Analysis
 
-### 1. Intention（目的）
+### 1. Intention
 
-{component} 的主要功能是：
-- {功能描述 1}
-- {功能描述 2}
+The main purpose of {component} is to:
+- {feature description 1}
+- {feature description 2}
 
-### 2. Request Paths（API 呼叫）
+### 2. Request Paths (API calls)
 
-| Service 檔案 | Request Path | 用途 |
-|-------------|--------------|------|
-| `fe/src/app/services/xxx.service.ts:42` | GET `/api/xxx` | 取得 xxx 資料 |
-| `fe/src/app/services/xxx.service.ts:56` | POST `/api/xxx` | 新增 xxx |
+| Service File | Request Path | Purpose |
+|-------------|--------------|---------|
+| `fe/src/app/services/xxx.service.ts:42` | GET `/api/xxx` | Fetch xxx data |
+| `fe/src/app/services/xxx.service.ts:56` | POST `/api/xxx` | Create xxx |
 
-### 3. UI Elements（介面元素）
+### 3. UI Elements
 
-| Element | 位置 | 顯示內容 |
-|---------|------|----------|
-| `<app-energy-display>` | `fe/src/app/components/xxx.component.html:24` | 顯示 kW 數值 |
-| `<mat-table>` | `fe/src/app/components/xxx.component.html:48` | 列表資料 |
+| Element | Location | Displays |
+|---------|----------|---------|
+| `<app-energy-display>` | `fe/src/app/components/xxx.component.html:24` | kW value |
+| `<mat-table>` | `fe/src/app/components/xxx.component.html:48` | List data |
 
 ---
 
@@ -42,7 +42,7 @@
 
 ### 1. API Endpoints
 
-| Route 檔案 | Handler 檔案 | HTTP Method + Path |
+| Route File | Handler File | HTTP Method + Path |
 |-----------|-------------|-------------------|
 | `be/routes/api.js:128` | `be/controller/xxxController.js:45` | GET `/api/xxx` |
 | `be/routes/api.js:135` | `be/controller/xxxController.js:89` | POST `/api/xxx` |
@@ -54,73 +54,73 @@
 | Column | Type | Description |
 |--------|------|-------------|
 | id | INT | Primary Key |
-| device_id | VARCHAR(50) | 設備 ID |
-| kw_value | DECIMAL(10,2) | 即時功率 |
-| timestamp | DATETIME | 時間戳記 |
+| device_id | VARCHAR(50) | Device ID |
+| kw_value | DECIMAL(10,2) | Real-time power |
+| timestamp | DATETIME | Timestamp |
 
-### 3. Data Workflow（完整追蹤）
+### 3. Data Workflow (full trace)
 
 ```
-1. MQTT 取值
-   └─ be/mqtt.js:156 - 訂閱 topic "/device/+/energy"
+1. MQTT receive
+   └─ be/mqtt.js:156 - Subscribe to topic "/device/+/energy"
          ↓
-2. dispatch 處理
-   └─ be/mqtt.js:178 - dispatchMessage() 解析 payload
+2. Dispatch processing
+   └─ be/mqtt.js:178 - dispatchMessage() parses payload
          ↓
-3. cache 存取
-   └─ be/cache/energyCache.js:34 - setDeviceData() 暫存最新值
+3. Cache access
+   └─ be/cache/energyCache.js:34 - setDeviceData() stores latest value
          ↓
-4. storage 計算
-   └─ be/storage/energyStorage.js:67 - calculateAggregation() 計算彙總
+4. Storage calculation
+   └─ be/storage/energyStorage.js:67 - calculateAggregation() computes aggregation
          ↓
-5. IPC 回傳
-   └─ be/ipc/ipcHandler.js:89 - sendToMain() 傳送至主進程
+5. IPC response
+   └─ be/ipc/ipcHandler.js:89 - sendToMain() sends to main process
          ↓
-6. handler 處理
-   └─ be/handler/energyHandler.js:112 - processEnergyData() 格式化
+6. Handler processing
+   └─ be/handler/energyHandler.js:112 - processEnergyData() formats data
          ↓
 7. DB insert
-   └─ be/model/energyModel.js:45 - insertEnergyData() 寫入資料庫
+   └─ be/model/energyModel.js:45 - insertEnergyData() writes to database
 ```
 
 ---
 
 ## Requirement Phases
 
-### Phase 1: {階段名稱}
+### Phase 1: {phase name}
 
 **Requirement**:
-{具體需求描述}
+{specific requirement description}
 
 **Modification Context**:
-- **為什麼改**: {改動原因}
-- **怎麼改**: {改動方式}
-- **影響範圍**: {受影響的檔案/功能}
+- **Why**: {reason for change}
+- **How**: {approach}
+- **Impact scope**: {affected files/features}
 
 **Implementation Steps**:
-- [ ] 修改 `be/handler/energyHandler.js:112` - 新增 energy meter 資料處理
-- [ ] 修改 `be/model/energyModel.js:45` - 新增 insert 欄位
-- [ ] 修改 `fe/src/app/components/xxx.component.ts:34` - 新增顯示邏輯
-- [ ] 修改 `fe/src/app/components/xxx.component.html:24` - 新增 UI element
+- [ ] Modify `be/handler/energyHandler.js:112` - Add energy meter data processing
+- [ ] Modify `be/model/energyModel.js:45` - Add insert fields
+- [ ] Modify `fe/src/app/components/xxx.component.ts:34` - Add display logic
+- [ ] Modify `fe/src/app/components/xxx.component.html:24` - Add UI element
 
 ---
 
-### Phase 2: {階段名稱}
+### Phase 2: {phase name}
 
 **Requirement**:
-{具體需求描述}
+{specific requirement description}
 
 **Modification Context**:
-- **為什麼改**: {改動原因}
-- **怎麼改**: {改動方式}
+- **Why**: {reason for change}
+- **How**: {approach}
 
 **Implementation Steps**:
-- [ ] {修改項目 1}（含 file:line）
-- [ ] {修改項目 2}（含 file:line）
+- [ ] {modification item 1} (include file:line)
+- [ ] {modification item 2} (include file:line)
 
 ---
 
 ## Notes
 
-- {注意事項 1}
-- {注意事項 2}
+- {note 1}
+- {note 2}

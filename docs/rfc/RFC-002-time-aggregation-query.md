@@ -1,4 +1,4 @@
-# RFC-001: Time Aggregation Query Design
+# RFC-002: Time Aggregation Query Design
 
 ## Status
 

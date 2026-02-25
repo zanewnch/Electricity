@@ -1,6 +1,6 @@
 ---
 name: unit-test
-description: Unit Test 編寫與彩色 Console Logging 工具。支援兩個子指令：(1) create - 建立新的 test file（可基於 spec 路徑或 NLP 描述）；(2) update - 為現有 test file 補充缺失的 console.log 與 ANSI 顏色。當用戶說「寫 unit test」「建立 test file」「新增 test」「補充 console.log」「更新 test」「為 test 加顏色」「test 彩色輸出」「整合 test」時觸發。
+description: Unit test creation and colored console logging tool. Supports two subcommands: (1) create - create new test files (based on spec path or NLP description); (2) update - add missing console.log and ANSI colors to existing test files. Triggered when users say "write unit test", "create test file", "add test", "add console.log", "update test", "add color to test", "colored test output", "integrate test".
 argument-hint: <create [spec-path-or-description] | update [test-file-path]>
 disable-model-invocation: false
 user-invocable: true
@@ -8,107 +8,107 @@ model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash(mkdir:*)
 ---
 
-# Unit Test - 編寫與 Console Logging 工具
+# Unit Test - Creation and Console Logging Tool
 
-## 使用方式
-
-```
-/unit-test create [spec-path 或 description]  → 建立新的 test file（基於 spec 或 NLP 描述）
-/unit-test update [test-file-path]            → 為現有 test file 補充 console.log 和顏色
-```
-
----
-
-## 解析 $ARGUMENTS
+## Usage
 
 ```
-$ARGUMENTS 格式：<子指令> [參數]
-
-子指令：
-- create  → 建立新 test file（基於 spec 路徑或 NLP 描述）
-- update  → 為現有 test file 補充 console.log 和顏色
+/unit-test create [spec-path or description]  → Create new test file (based on spec or NLP description)
+/unit-test update [test-file-path]            → Add missing console.log and colors to existing test file
 ```
 
 ---
 
-# 子指令 1: create
+## Parsing $ARGUMENTS
 
-## 輸入 - 雙模式
+```
+$ARGUMENTS format: <subcommand> [parameters]
 
-### 方式 A：基於 Spec 路徑
+Subcommands:
+- create  → Create new test file (based on spec path or NLP description)
+- update  → Add console.log and colors to existing test file
+```
+
+---
+
+# Subcommand 1: create
+
+## Input - Dual Mode
+
+### Mode A: Based on Spec Path
 
 ```
 /unit-test create [spec-folder-path]
 ```
 
-**範例：**
+**Example:**
 ```
 /unit-test create be/notes/spec/data-correction
 ```
 
-### 方式 B：基於 NLP 描述
+### Mode B: Based on NLP Description
 
 ```
 /unit-test create "[test description]"
 ```
 
-**範例：**
+**Example:**
 ```
 /unit-test create "Phase 1: table existence check, Phase 2: data population verification, Phase 3: kWh consistency validation"
 ```
 
-## 輸入檢測邏輯
+## Input Detection Logic
 
-| 條件 | 類型 | 處理方式 |
-|------|------|---------|
-| 輸入是目錄路徑 | Spec 路徑 | 讀取 `spec.md`，提取 phases 和 requirements |
-| 輸入包含描述文字 | NLP 描述 | 解析描述文字，自動生成 phase structure |
+| Condition | Type | Processing |
+|-----------|------|-----------|
+| Input is directory path | Spec path | Read `spec.md`, extract phases and requirements |
+| Input contains description text | NLP description | Parse description text, auto-generate phase structure |
 
-**邏輯判斷：**
+**Logic:**
 ```
-if (輸入 .includes('/') 或 輸入 .endsWith('.md')) {
-  // 方式 A：spec 路徑
-  讀取 spec.md → 提取 phases
+if (input includes '/' or ends with '.md') {
+  // Mode A: spec path
+  Read spec.md → extract phases
 } else {
-  // 方式 B：NLP 描述
-  解析描述文字 → 生成 phase structure
+  // Mode B: NLP description
+  Parse description text → generate phase structure
 }
 ```
 
-## 輸出位置
+## Output Location
 
 ```
 tests/unit/{feature-name}.test.js
 ```
 
-## 流程
+## Workflow
 
-### 1. 讀取 Spec
+### 1. Read Spec
 
-- 讀取 `{spec-folder}/spec.md`
-- 提取 fileoverview 的 description
-- 提取所有 Requirement Phases（作為 describe blocks）
+- Read `{spec-folder}/spec.md`
+- Extract description from fileoverview
+- Extract all Requirement Phases (as describe blocks)
 
-### 2. 顏色常數定義
+### 2. Color Constants Definition
 
-自動加入 ANSI 顏色常數（文件頂部）：
+Automatically add ANSI color constants (at file top):
 
 ```javascript
-// 定義 ANSI 色碼常數
+// Define ANSI color codes
 const colors = {
-    purple: '\x1b[95m',      // 主標題邊框
-    yellow: '\x1b[93m',      // 標籤（[SQL]、[結果]）
-    blue: '\x1b[38;2;156;220;254m',   // Phase 標記
-    cyan: '\x1b[96m',        // 一般資訊
-    green: '\x1b[92m',       // 成功狀態
-    red: '\x1b[91m',         // 失敗/警告
-    reset: '\x1b[0m'         // 重置顏色
+    purple: '\x1b[95m',      // Main title border
+    yellow: '\x1b[93m',      // Tags ([SQL], [Result])
+    blue: '\x1b[38;2;156;220;254m',   // Phase marker
+    cyan: '\x1b[96m',        // General info
+    green: '\x1b[92m',       // Success status
+    red: '\x1b[91m',         // Failure/warning
+    reset: '\x1b[0m'         // Reset color
 };
 ```
 
-### 3. 生成 Test File
+### 3. Generate Test File
 
-基於以下格式生成 test file（含顏色套用）：
+Generate test file based on following format (with colors applied):
 
 ```javascript
 /**
@@ -118,7 +118,7 @@ const colors = {
 
 import { describe, it, beforeAll, afterAll, expect } from 'vitest';
 
-// 定義 ANSI 色碼常數
+// Define ANSI color codes
 const colors = {
     purple: '\x1b[95m',
     yellow: '\x1b[93m',
@@ -129,10 +129,10 @@ const colors = {
     reset: '\x1b[0m'
 };
 
-describe('整體 Test Suite 名稱', () => {
-    // Layer 1: Main Suite（purple 邊框）
+describe('Overall Test Suite Name', () => {
+    // Layer 1: Main Suite (purple border)
     console.log(colors.purple + '\n╔══════════════════════════════════════╗' + colors.reset);
-    console.log(colors.purple + '║  整體 Test Suite 名稱                 ║' + colors.reset);
+    console.log(colors.purple + '║  Overall Test Suite Name             ║' + colors.reset);
     console.log(colors.purple + '╚══════════════════════════════════════╝' + colors.reset);
 
     beforeAll(async () => {
@@ -143,21 +143,21 @@ describe('整體 Test Suite 名稱', () => {
         // teardown
     });
 
-    // Phase 1（blue 標記）
+    // Phase 1 (blue marker)
     describe('Phase 1: ...', () => {
-        // ⚠️ 重要：使用 beforeAll 確保在測試執行時才輸出，而非 describe 定義時
+        // ⚠️ Important: Use beforeAll to ensure output during test execution, not during describe definition
         beforeAll(() => {
             console.log(colors.blue + '\n── [1] Phase 1: ... ──' + colors.reset);
         });
 
-        it('測試項目 1', async () => {
-            console.log(colors.cyan + '  → 測試項目 1' + colors.reset);
+        it('Test item 1', async () => {
+            console.log(colors.cyan + '  → Test item 1' + colors.reset);
             // test code
             expect(...).toBe(...);
         });
 
-        it('測試項目 2', async () => {
-            console.log(colors.cyan + '  → 測試項目 2' + colors.reset);
+        it('Test item 2', async () => {
+            console.log(colors.cyan + '  → Test item 2' + colors.reset);
             // test code
             expect(...).toBe(...);
         });
@@ -169,105 +169,105 @@ describe('整體 Test Suite 名稱', () => {
             console.log(colors.blue + '\n── [2] Phase 2: ... ──' + colors.reset);
         });
 
-        it('測試項目 1', async () => {
-            console.log(colors.cyan + '  → 測試項目 1' + colors.reset);
+        it('Test item 1', async () => {
+            console.log(colors.cyan + '  → Test item 1' + colors.reset);
             // test code with results
             const count = await getCount();
-            console.log(colors.yellow + '  [結果]' + colors.reset);
-            console.log(`  筆數: ${count > 0 ? colors.green + count : colors.red + count}${colors.reset}`);
+            console.log(colors.yellow + '  [Result]' + colors.reset);
+            console.log(`  Count: ${count > 0 ? colors.green + count : colors.red + count}${colors.reset}`);
         });
     });
 });
 ```
 
-## Console.log 格式規則
+## Console.log Format Rules
 
-| 層級 | 顏色 | 格式 | 例子 |
-|------|------|------|------|
-| **Main Suite** | purple | `console.log(colors.purple + '╔═══════════╗' + colors.reset)` | 邊框式標題 |
-| **Phase** | blue | `beforeAll(() => { console.log(...) })` | 區塊分隔（必須用 beforeAll） |
-| **Test Case** | cyan | `console.log(colors.cyan + '  → 測試名稱' + colors.reset)` | 步驟標記 |
-| **標籤** | yellow | `console.log(colors.yellow + '  [結果]' + colors.reset)` | [SQL]、[結果]、[樣本] |
-| **成功** | green | `colors.green + 'OK' + colors.reset` | 積極結果 |
-| **失敗** | red | `colors.red + 'ERROR' + colors.reset` | 負面結果 |
-| **一般資訊** | cyan | `console.log(colors.cyan + '  info...' + colors.reset)` | 補充說明 |
+| Level | Color | Format | Example |
+|-------|-------|--------|---------|
+| **Main Suite** | purple | `console.log(colors.purple + '╔═══════════╗' + colors.reset)` | Bordered title |
+| **Phase** | blue | `beforeAll(() => { console.log(...) })` | Block separator (must use beforeAll) |
+| **Test Case** | cyan | `console.log(colors.cyan + '  → Test name' + colors.reset)` | Step marker |
+| **Tag** | yellow | `console.log(colors.yellow + '  [Result]' + colors.reset)` | [SQL], [Result], [Sample] |
+| **Success** | green | `colors.green + 'OK' + colors.reset` | Positive result |
+| **Failure** | red | `colors.red + 'ERROR' + colors.reset` | Negative result |
+| **General Info** | cyan | `console.log(colors.cyan + '  info...' + colors.reset)` | Additional notes |
 
-### ⚠️ 重要：Console.log 執行時機
+### ⚠️ Important: Console.log Execution Timing
 
 ```javascript
 describe('Phase 1', () => {
-    // ❌ 錯誤：這裡的 console.log 在 describe 定義時就執行（test file 載入時）
-    console.log('Phase 1 開始');  // 會在所有測試開始前就輸出
+    // ❌ Wrong: console.log here executes during describe definition (on file load)
+    console.log('Phase 1 started');  // Outputs before all tests start
 
-    // ✅ 正確：使用 beforeAll 確保在該 describe 的測試執行前才輸出
+    // ✅ Correct: Use beforeAll to ensure output before Phase 1 tests execute
     beforeAll(() => {
-        console.log('Phase 1 開始');  // 會在 Phase 1 的第一個測試前輸出
+        console.log('Phase 1 started');  // Outputs before first Phase 1 test
     });
 
-    it('測試 1', () => {
-        // ✅ 正確：這裡的 console.log 在測試執行時才輸出
-        console.log('測試 1 進行中');
+    it('Test 1', () => {
+        // ✅ Correct: console.log here outputs during test execution
+        console.log('Test 1 running');
     });
 });
 ```
 
-**原理：** Vitest/Jest 在載入 test file 時會立即執行所有 `describe()` 的 callback，但 `beforeAll`/`it` 內的程式碼會延遲到測試實際執行時才跑。
+**Principle:** Vitest/Jest executes all `describe()` callbacks immediately on file load, but code inside `beforeAll`/`it` is delayed until actual test execution.
 
-## 完成後提示
+## Completion Message
 
 ```
-✅ Test file 已建立
+✅ Test file created
 
-📍 路徑: tests/unit/{feature-name}.test.js
+📍 Path: tests/unit/{feature-name}.test.js
 
-📌 執行測試：
+📌 Run tests:
 npx vitest run tests/unit/{feature-name}.test.js --reporter=verbose
 
-💡 提示：
-- 每個 console.log 會輸出到 test runner 的日誌中
-- 在 UI 上可以直觀看到每個階段的進度
+💡 Tips:
+- Each console.log outputs to test runner logs
+- Stages are clearly visible in UI
 ```
 
 ---
 
-# 子指令 2: update
+# Subcommand 2: update
 
-## 輸入
+## Input
 
 ```
 /unit-test update [test-file-path]
 ```
 
-**範例：**
+**Example:**
 ```
 /unit-test update tests/unit/dataCorrection.test.js
 ```
 
-## 功能
+## Functionality
 
-自動為現有 test file 中缺少 console.log 的 describe/it blocks 補充。
+Automatically add missing console.log to describe/it blocks in existing test file.
 
-### 檢查清單
+### Checklist
 
-- [ ] 是否有 colors 常數定義？
-- [ ] Main describe block 開始有 purple 邊框 console.log？
-- [ ] 所有 Phase describe blocks 有 `beforeAll` 包裝的 blue 標記 console.log？
-- [ ] 所有 it blocks 開始有 cyan 標記 console.log？
-- [ ] 所有結果/資料輸出是否套用正確顏色（green/red/yellow）？
+- [ ] Are color constants defined?
+- [ ] Does main describe block start with purple border console.log?
+- [ ] Do all Phase describe blocks have blue marker console.log wrapped in `beforeAll`?
+- [ ] Does each it block start with cyan marker console.log?
+- [ ] Do all result/data outputs use correct colors (green/red/yellow)?
 
-### 補充邏輯
+### Enhancement Logic
 
-#### 1. Colors 常數定義
+#### 1. Color Constants Definition
 
-檢查文件頂部是否有 colors 定義，若無則補上：
+Check if colors are defined at file top, add if missing:
 
 ```javascript
-// ❌ 沒有 colors 定義
+// ❌ No color constants
 import { describe, it, expect } from 'vitest';
 
-describe('整體名稱', () => { ... });
+describe('Overall name', () => { ... });
 
-// ✅ 補充為：
+// ✅ Enhanced to:
 import { describe, it, expect } from 'vitest';
 
 const colors = {
@@ -280,43 +280,43 @@ const colors = {
     reset: '\x1b[0m'
 };
 
-describe('整體名稱', () => { ... });
+describe('Overall name', () => { ... });
 ```
 
 #### 2. Main Describe Block
 
-檢查是否已有 purple 邊框 console.log，若無則補上：
+Check if purple border console.log exists, add if missing:
 
 ```javascript
-describe('整體名稱', () => {
-    // ❌ 沒有或顏色不對
+describe('Overall name', () => {
+    // ❌ Missing or wrong color
     console.log('\n========================================');
-    console.log('📍 整體名稱');
+    console.log('📍 Overall name');
     console.log('========================================\n');
     it('test', () => { ... });
 
-    // ✅ 補充為：
+    // ✅ Enhanced to:
     console.log(colors.purple + '\n╔══════════════════════════════════════╗' + colors.reset);
-    console.log(colors.purple + '║  整體名稱                            ║' + colors.reset);
+    console.log(colors.purple + '║  Overall name                       ║' + colors.reset);
     console.log(colors.purple + '╚══════════════════════════════════════╝' + colors.reset);
-    
+
     it('test', () => { ... });
 });
 ```
 
 #### 3. Phase Describe Blocks
 
-檢查 Phase describe block 開始是否有 blue 標記 console.log（必須放在 `beforeAll` 內），若無則補上：
+Check if Phase describe block has blue marker console.log (must be in `beforeAll`), add if missing:
 
 ```javascript
-describe('Phase 1: 基礎驗證', () => {
-    // ❌ 錯誤：直接在 describe 內 console.log（會在 describe 定義時執行，而非測試時）
-    console.log('\n📍 Phase 1: 基礎驗證');
+describe('Phase 1: Basic validation', () => {
+    // ❌ Wrong: Direct console.log in describe (executes at define time, not test time)
+    console.log('\n📍 Phase 1: Basic validation');
     it('test', () => { ... });
 
-    // ✅ 正確：使用 beforeAll 確保在測試執行時才輸出
+    // ✅ Correct: Use beforeAll to ensure output before Phase 1 tests execute
     beforeAll(() => {
-        console.log(colors.blue + '\n── [1] Phase 1: 基礎驗證 ──' + colors.reset);
+        console.log(colors.blue + '\n── [1] Phase 1: Basic validation ──' + colors.reset);
     });
 
     it('test', () => { ... });
@@ -325,132 +325,132 @@ describe('Phase 1: 基礎驗證', () => {
 
 #### 4. It Blocks
 
-檢查每個 it block 開始是否有 cyan 標記 console.log，若無則補上：
+Check if each it block starts with cyan marker console.log, add if missing:
 
 ```javascript
-it('驗證 DB 連線', async () => {
-    // ❌ 沒有 console.log 作為第一行
+it('Verify DB connection', async () => {
+    // ❌ No console.log as first line
     const result = await query();
     expect(result).toBe(true);
 
-    // ✅ 補充為：
-    it('驗證 DB 連線', async () => {
-        console.log(colors.cyan + '  → 驗證 DB 連線' + colors.reset);
+    // ✅ Enhanced to:
+    it('Verify DB connection', async () => {
+        console.log(colors.cyan + '  → Verify DB connection' + colors.reset);
         const result = await query();
         expect(result).toBe(true);
     });
 });
 ```
 
-#### 5. 結果與資料輸出顏色
+#### 5. Result and Data Output Colors
 
-檢查是否有使用條件色彩輸出結果（green 成功、red 失敗），若無則補上：
+Check if conditional color output is used (green for success, red for failure), add if missing:
 
 ```javascript
-// ❌ 沒有顏色區分
-console.log(`  筆數: ${count}`);
+// ❌ No color distinction
+console.log(`  Count: ${count}`);
 
-// ✅ 補充為：
-console.log(colors.yellow + '  [結果]' + colors.reset);
-console.log(`  筆數: ${count > 0 ? colors.green + count : colors.red + count}${colors.reset}`);
+// ✅ Enhanced to:
+console.log(colors.yellow + '  [Result]' + colors.reset);
+console.log(`  Count: ${count > 0 ? colors.green + count : colors.red + count}${colors.reset}`);
 ```
 
-### 檢查與補充流程
+### Check and Enhancement Process
 
 ```bash
-1. 檢查文件頂部是否有 colors 常數，若無則補上
-2. 解析 AST 或 Regex 尋找所有 describe/it blocks
-3. 檢查每個 block 的開始是否有正確顏色的 console.log
-   - Main describe → purple 邊框（直接 console.log）
-   - Phase describe → blue 標記（必須放在 beforeAll 內）
-   - It block → cyan 標記（直接 console.log）
-4. 檢查結果/資料輸出是否有條件顏色（green/red/yellow）
-5. 補充缺失的 console.log 和顏色（保持原有縮排）
-6. 驗證所有修改後的程式碼是否有效
+1. Check if colors constants exist at file top, add if missing
+2. Parse AST or Regex to find all describe/it blocks
+3. Check each block start for correct color console.log
+   - Main describe → purple border (direct console.log)
+   - Phase describe → blue marker (must be in beforeAll)
+   - It block → cyan marker (direct console.log)
+4. Check result/data outputs for conditional colors (green/red/yellow)
+5. Add missing console.log and colors (maintain original indentation)
+6. Verify all modified code is valid
 ```
 
-## 完成後提示
+## Completion Message
 
 ```
-✅ Test file 更新完成
+✅ Test file updated
 
-📊 修改統計：
-- Colors 常數: [新增/已存在]
-- Main describe 邊框: +N 個
-- Phase describe 標記: +N 個
-- Test case 標記: +N 個
-- 結果顏色條件: +N 個
+📊 Change Summary:
+- Color constants: [Added/Existing]
+- Main describe border: +N items
+- Phase describe marker: +N items
+- Test case marker: +N items
+- Result color conditions: +N items
 
-🎨 顏色套用：
-- purple (邊框): 新增 1 個
-- blue (Phase): 新增 N 個
-- cyan (步驟): 新增 N 個
-- yellow (標籤): 新增 N 個
-- green/red (結果): 新增 N 個
+🎨 Color Applications:
+- purple (border): Added 1
+- blue (Phase): Added N
+- cyan (steps): Added N
+- yellow (tags): Added N
+- green/red (results): Added N
 
-📍 文件: tests/unit/xxx.test.js
+📍 File: tests/unit/xxx.test.js
 
-💡 建議執行測試確認效果：
+💡 Recommended to run tests to verify:
 npx vitest run tests/unit/xxx.test.js --reporter=verbose
 ```
 
 ---
 
-## Console.log 輸出範例
+## Console.log Output Example
 
-### 在 Test Runner UI 看到的效果
+### Effect visible in Test Runner UI
 
 ```
-✓ Data Correction 驗證測試
+✓ Data Correction Validation Tests
 
 ========================================
-📍 Data Correction 驗證測試
+📍 Data Correction Validation Tests
 ========================================
 
-✓ MySQL 連線建立成功
+✓ MySQL connection established
 
-📍 Phase 1: 基礎連線與表結構驗證
-  → DB 連線成功
+📍 Phase 1: Basic connection and table structure validation
+  → DB connection successful
   ✓ expected 1 to be 1
-  
-  → 契約 ID 1 的電價表存在
+
+  → Contract ID 1 price table exists
   ✓ expected true to be true
 
-📍 Phase 2: 資料存在性驗證
-  → 分鐘電價表有資料
-  📊 cElePResult_1_2025_1: 150 筆
+📍 Phase 2: Data existence validation
+  → Minute price table has data
+  📊 cElePResult_1_2025_1: 150 records
   ✓ expected 150 to be greater than 0
 
-📍 Phase 3: kW/kWh 一致性驗證
-  → 驗證 computekWResult.kW / 60 === cElePResult.kWh
-  📊 驗證 10 筆 EM 資料
+📍 Phase 3: kW/kWh consistency validation
+  → Verify computekWResult.kW / 60 === cElePResult.kWh
+  📊 Validate 10 EM records
   ✓ expected true to be true
 ```
 
 ---
 
-## 注意事項
+## Notes
 
-1. **console.log 格式統一** - 三層級的格式保持一致
-2. **縮排正確** - 根據程式碼層級自動調整縮排
-3. **不修改測試邏輯** - 只補充 console.log，不改變原有的測試程式碼
-4. **保留現有 console.log** - 如果已有 console.log，不重複添加
-5. **⚠️ Phase 的 console.log 必須放在 beforeAll 內** - 避免在 test file 載入時就執行
+1. **Consistent console.log format** - Keep three-level format consistent
+2. **Correct indentation** - Auto-adjust indentation based on code level
+3. **Don't modify test logic** - Only add console.log, don't change existing test code
+4. **Preserve existing console.log** - Don't add duplicates if already exists
+5. **⚠️ Phase console.log must be in beforeAll** - Avoid executing on file load
 
 ---
 
-## 參考文件與指南
+## Reference Documents and Guides
 
-**Skill 文檔：**
-- [FORMAT-GUIDE.md](references/FORMAT-GUIDE.md) - Console.log 三層級格式詳解
-- [COLORS-GUIDE.md](references/COLORS-GUIDE.md) - ANSI 顏色使用完整指南
-- [USAGE-EXAMPLES.md](references/USAGE-EXAMPLES.md) - 使用範例與場景說明
+**Skill Documentation:**
+- [FORMAT-GUIDE.md](references/FORMAT-GUIDE.md) - Three-level console.log format details
+- [COLORS-GUIDE.md](references/COLORS-GUIDE.md) - Complete ANSI color usage guide
+- [USAGE-EXAMPLES.md](references/USAGE-EXAMPLES.md) - Usage examples and scenarios
 
-**實際範例：**
-- [dataCorrection.test.js](../../../tests/unit/dataCorrection.test.js) - 基礎格式範例
-- [emCsvRepo.test.js](../../../tests/unit/em/emCsvRepo.test.js) - 完整顏色應用範例
+**Actual Examples:**
+- [dataCorrection.test.js](../../../tests/unit/dataCorrection.test.js) - Basic format example
+- [emCsvRepo.test.js](../../../tests/unit/em/emCsvRepo.test.js) - Complete color application example
 
-**外部參考：**
+**External References:**
 - [Vitest Reporter Docs](https://vitest.dev/guide/reporters.html)
 - [ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code)
 

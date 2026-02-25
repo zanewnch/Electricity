@@ -1,228 +1,228 @@
 ---
 name: spec-impl
-description: 執行 spec 實作與審查。支援兩個子指令：(1) run - 根據 spec 執行實作；(2) review - 審查實作結果是否符合 spec。當用戶說「實作 spec」「執行 spec」「審查實作」「review implementation」時觸發。
-argument-hint: <run|review> [spec 資料夾路徑]
+description: Execute spec implementation and review. Supports two subcommands: (1) run - implement based on spec; (2) review - review implementation results against spec. Triggered when user says "implement spec", "execute spec", "review implementation".
+argument-hint: <run|review> [spec folder path]
 disable-model-invocation: false
 user-invocable: true
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash(npm:*, node:*)
 ---
 
-# Spec-Impl - 規格實作與審查
+# Spec-Impl - Specification Implementation & Review
 
-## 使用方式
-
-```
-/spec-impl run [spec 資料夾路徑]      → 執行實作
-/spec-impl review [spec 資料夾路徑]   → 審查實作結果（implement 後）
-```
-
----
-
-## 解析 $ARGUMENTS
+## Usage
 
 ```
-$ARGUMENTS 格式：<子指令> [spec 資料夾路徑]
-
-子指令：
-- run    → 執行「實作 Spec」流程
-- review → 執行「審查實作結果」流程
+/spec-impl run [spec folder path]      → Execute implementation
+/spec-impl review [spec folder path]   → Review implementation results (after implement)
 ```
 
 ---
 
-# 子指令 1: run
-
-## 輸入
+## Parsing $ARGUMENTS
 
 ```
-/spec-impl run [spec 資料夾路徑]
+$ARGUMENTS format: <subcommand> [spec folder path]
+
+Subcommands:
+- run    → Execute "Implement Spec" workflow
+- review → Execute "Review Implementation Results" workflow
 ```
 
-例如：`/spec-impl run D:\GitHub\gateway\be\notes\spec\energy-meter-dashboard`
+---
 
-## 可用的 MCP 工具
+# Subcommand 1: run
 
-| MCP | 工具 | 用途 |
-|-----|------|------|
-| greptile | `mcp__plugin_greptile_greptile__search_greptile_comments` | 語意搜尋，理解修改位置上下文、確認影響範圍 |
-| serena | `mcp__plugin_serena_serena__find_symbol`, `mcp__plugin_serena_serena__replace_symbol_body` | Symbol-level 編輯，精準修改函數 |
-| git | `Bash(git diff:*)`, `Bash(git status:*)` | 確認修改內容 |
-| memory | `mcp__memory__search_nodes` | 取得之前分析的 spec 資訊 |
-
-## 執行流程
-
-### Step 1: 讀取 Spec
-
-讀取 `{path}/spec.md` 檔案內容。
-
-### Step 2: 建立 Todo List
-
-從 spec 的 Implementation Steps 提取所有 checkbox 項目：
-
-1. 解析所有 Phase 的 Implementation Steps
-2. 提取每個 `- [ ]` checkbox 項目
-3. 使用 TodoWrite 建立追蹤清單
-
-### Step 3: 逐步實作
-
-按照 Phase 順序執行：
-
-**3.1 開始 Phase**
-1. 將當前 todo 標記為 `in_progress`
-2. 讀取該 Phase 的 Modification Context
-
-**3.2 執行修改**
-1. 從 checkbox 描述提取 file:line
-2. 使用 Read tool 讀取該檔案
-3. 使用 Edit tool 進行修改
-4. 標記 todo 為 `completed`
-
-**3.3 Phase 間過渡**
-1. 確認該 Phase 所有 checkbox 已完成
-2. 開始下一個 Phase
-
-### Step 4: 驗證
-
-1. 確認所有 todo 都為 `completed`
-2. 如有測試，執行相關測試
-
-## 完成後提示
+## Input
 
 ```
-實作完成 ✅
+/spec-impl run [spec folder path]
+```
 
-完成項目：
-✅ Phase 1: {phase 名稱}
+Example: `/spec-impl run D:\GitHub\gateway\be\notes\spec\energy-meter-dashboard`
+
+## Available MCP Tools
+
+| MCP | Tool | Purpose |
+|-----|------|---------|
+| greptile | `mcp__plugin_greptile_greptile__search_greptile_comments` | Semantic search to understand modification context and confirm impact scope |
+| serena | `mcp__plugin_serena_serena__find_symbol`, `mcp__plugin_serena_serena__replace_symbol_body` | Symbol-level editing for precise function modifications |
+| git | `Bash(git diff:*)`, `Bash(git status:*)` | Verify modification contents |
+| memory | `mcp__memory__search_nodes` | Retrieve previously analyzed spec information |
+
+## Execution Workflow
+
+### Step 1: Read Spec
+
+Read the contents of `{path}/spec.md`.
+
+### Step 2: Build Todo List
+
+Extract all checkbox items from the spec's Implementation Steps:
+
+1. Parse all Phase Implementation Steps
+2. Extract each `- [ ]` checkbox item
+3. Use TodoWrite to create a tracking list
+
+### Step 3: Implement Step by Step
+
+Execute in Phase order:
+
+**3.1 Start Phase**
+1. Mark current todo as `in_progress`
+2. Read that Phase's Modification Context
+
+**3.2 Execute Modifications**
+1. Extract file:line from checkbox description
+2. Use Read tool to read the file
+3. Use Edit tool to make modifications
+4. Mark todo as `completed`
+
+**3.3 Phase Transition**
+1. Confirm all checkboxes in that Phase are completed
+2. Start next Phase
+
+### Step 4: Validation
+
+1. Confirm all todos are `completed`
+2. Run related tests if any exist
+
+## Completion Prompt
+
+```
+Implementation complete ✅
+
+Completed items:
+✅ Phase 1: {phase name}
   - ✅ {checkbox 1}
   - ✅ {checkbox 2}
 
-建議執行 /spec-impl review {path} 審查實作結果。
+Recommended: run /spec-impl review {path} to review implementation results.
 ```
 
 ---
 
-# 子指令 2: review
+# Subcommand 2: review
 
-## 輸入
+## Input
 
 ```
-/spec-impl review [spec 資料夾路徑]
+/spec-impl review [spec folder path]
 ```
 
-## 審查重點（實作結果）
+## Review Focus (Implementation Results)
 
-### 1. 修改完成度檢查
+### 1. Modification Completeness Check
 
-對每個 implementation step 的 checkbox：
+For each implementation step checkbox:
 
-| 檢查項目 | 驗證方式 |
-|---------|---------|
-| 修改是否存在 | 檢查 file:line 附近是否有新增/修改的程式碼 |
-| 修改是否正確 | 比對 spec 的 modification context 描述 |
-| 邏輯是否完整 | 確認修改有處理所有必要的 case |
+| Check Item | Verification Method |
+|-----------|---------------------|
+| Modification exists | Check if new/modified code exists near file:line |
+| Modification is correct | Compare against spec's modification context description |
+| Logic is complete | Confirm modification handles all necessary cases |
 
-### 2. 功能驗證（如適用）
+### 2. Functional Validation (if applicable)
 
-- 執行相關測試
-- 確認新功能正常運作
-- 確認沒有破壞現有功能
+- Run related tests
+- Confirm new features work correctly
+- Confirm existing features are not broken
 
-### 3. 程式碼品質檢查
+### 3. Code Quality Check
 
-參考專案的 coding standards：
+Reference the project's coding standards:
 
-| 檢查項目 | 參考文件 |
-|---------|---------|
-| JSDoc 註解 | `.claude/coding-standards.md` |
-| Logger 使用 | `.claude/logger-standards.md` |
-| Error Handling | 確認有適當的錯誤處理 |
+| Check Item | Reference File |
+|-----------|---------------|
+| JSDoc comments | `.claude/coding-standards.md` |
+| Logger usage | `.claude/logger-standards.md` |
+| Error Handling | Confirm appropriate error handling exists |
 
-## 輸出
+## Output
 
 `{spec-folder}/impl-review-report.md`
 
 ```markdown
 # Implementation Review Report
 
-**Spec**: {spec 名稱}
-**審查日期**: {日期}
-**審查類型**: 實作結果審查（implement 後）
+**Spec**: {spec name}
+**Review Date**: {date}
+**Review Type**: Implementation Result Review (post-implement)
 
 ---
 
-## 審查結果摘要
+## Review Summary
 
-- 修改完成度: X / Y (XX%)
-- 程式碼品質: ✅ 通過 / ⚠️ 需改善
-- 整體狀態: ✅ 通過 / ❌ 需修正
-
----
-
-## 修改驗證結果
-
-### Phase 1: {phase 名稱}
-
-| Checkbox | file:line | 狀態 | 說明 |
-|----------|-----------|------|------|
-| {描述} | {位置} | ✅/⚠️/❌ | {說明} |
+- Modification Completeness: X / Y (XX%)
+- Code Quality: ✅ Pass / ⚠️ Needs Improvement
+- Overall Status: ✅ Pass / ❌ Needs Correction
 
 ---
 
-## 需修正項目
+## Modification Validation Results
 
-1. ❌ {問題描述}
+### Phase 1: {phase name}
 
----
-
-## 改善建議
-
-1. 💡 {建議}
-```
-
-## 完成後提示
-
-**通過：**
-```
-實作審查完成 ✅
-
-報告已存於 {path}/impl-review-report.md
-
-所有修改都正確完成，符合 spec 要求。
-```
-
-**未通過：**
-```
-實作審查完成 ❌
-
-報告已存於 {path}/impl-review-report.md
-
-請根據報告中的問題進行修正。
-```
+| Checkbox | file:line | Status | Notes |
+|----------|-----------|--------|-------|
+| {description} | {location} | ✅/⚠️/❌ | {notes} |
 
 ---
 
-## 注意事項
+## Items Requiring Correction
 
-1. **run**: 嚴格按照 spec 執行，不要自行添加額外修改
-2. **review**: 比對 spec 描述，以 modification context 為準
-3. **遇到問題時停止**: 如果發現 spec 有問題，停止並通知用戶
+1. ❌ {issue description}
 
 ---
 
-## 錯誤處理
+## Improvement Suggestions
 
-### 如果 file:line 不存在
+1. 💡 {suggestion}
+```
+
+## Completion Prompt
+
+**Pass:**
+```
+Implementation review complete ✅
+
+Report saved at {path}/impl-review-report.md
+
+All modifications are correctly completed and meet spec requirements.
+```
+
+**Fail:**
+```
+Implementation review complete ❌
+
+Report saved at {path}/impl-review-report.md
+
+Please fix the issues listed in the report.
+```
+
+---
+
+## Notes
+
+1. **run**: Strictly follow the spec, do not add extra modifications on your own
+2. **review**: Compare against spec description, use modification context as the reference
+3. **Stop on issues**: If you find a problem with the spec, stop and notify the user
+
+---
+
+## Error Handling
+
+### If file:line does not exist
 
 ```
-⚠️ 錯誤：spec 中的 file:line 不存在
+⚠️ Error: file:line specified in spec does not exist
 
-檔案: {file_path}
-行數: {line_number}
+File: {file_path}
+Line: {line_number}
 
-建議：
-1. 執行 /spec review {path} 重新審查 spec
-2. 或手動修正 spec.md 中的 file:line
+Suggestions:
+1. Run /spec review {path} to re-review the spec
+2. Or manually correct the file:line in spec.md
 ```
 
 $ARGUMENTS

@@ -1,303 +1,303 @@
 ---
 name: spec
-description: 功能規格文件管理。支援三個子指令：(1) create - 分析 frontend/backend 建立 spec 文件；(2) review - 審查 spec 完整性（implement 前）；(3) update - 修改 spec 內容並保持格式一致。當用戶說「建立 spec」「分析功能」「審查 spec」「review spec」「幫我 create spec」「幫我 review spec」「幫我改 spec」「修改 spec」「更新 spec」時觸發。
-argument-hint: <create|review|update> [參數]
+description: Specification document management. Supports three subcommands: (1) create - analyze frontend/backend and create spec file; (2) review - verify spec completeness (before implementation); (3) update - modify spec content while maintaining format consistency. Triggered when users say "create spec", "analyze feature", "review spec", "help me create spec", "help me review spec", "help me change spec", "modify spec", "update spec".
+argument-hint: <create|review|update> [parameters]
 disable-model-invocation: false
 user-invocable: true
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash(mkdir:*)
 ---
 
-# Spec - 功能規格文件管理
+# Spec - Specification Document Management
 
-## 使用方式
-
-```
-/spec create [component/feature 名稱]   → 建立 spec 文件
-/spec review [spec 資料夾路徑]          → 審查 spec（implement 前）
-/spec update [spec 資料夾路徑]          → 修改 spec 內容
-```
-
----
-
-## 解析 $ARGUMENTS
+## Usage
 
 ```
-$ARGUMENTS 格式：<子指令> [參數...]
-
-子指令：
-- create → 執行「建立 Spec」流程
-- review → 執行「審查 Spec」流程
-- update → 執行「修改 Spec」流程
+/spec create [component/feature name]   → Create spec file
+/spec review [spec folder path]         → Review spec (before implementation)
+/spec update [spec folder path]         → Modify spec content
 ```
 
 ---
 
-# 子指令 1: create
-
-## 輸入
+## Parsing $ARGUMENTS
 
 ```
-/spec create [component 名稱或 feature 描述]
+$ARGUMENTS format: <subcommand> [parameters...]
+
+Subcommands:
+- create → Execute "Create Spec" workflow
+- review → Execute "Review Spec" workflow
+- update → Execute "Modify Spec" workflow
 ```
 
-## 輸出位置
+---
+
+# Subcommand 1: create
+
+## Input
+
+```
+/spec create [component name or feature description]
+```
+
+## Output Location
 
 ```
 D:\GitHub\gateway\be\notes\spec\{feature-name}\spec.md
 ```
 
-## 分析流程
+## Analysis Workflow
 
-使用 ultrathink 進行深度分析，確保 data workflow 每一步都正確串接。
+Use deep analysis to ensure every step of data workflow is correctly connected.
 
-### 可用的 MCP 工具
+### Available MCP Tools
 
-優先使用以下 MCP 工具來加速分析：
+Prioritize using following MCP tools to accelerate analysis:
 
-| MCP | 工具 | 用途 |
-|-----|------|------|
-| greptile | `mcp__plugin_greptile_greptile__search_greptile_comments` | 語意搜尋 codebase，找 data workflow 路徑 |
-| serena | `mcp__plugin_serena_serena__find_symbol`, `mcp__plugin_serena_serena__find_referencing_symbols` | Symbol-level 程式碼分析，追蹤函數調用 |
-| memory | `mcp__memory__create_entities`, `mcp__memory__search_nodes` | 記住分析結果供後續使用 |
-| git | `Bash(git blame:*)`, `Bash(git log:*)` | 查看程式碼歷史和修改記錄 |
+| MCP | Tool | Purpose |
+|-----|------|---------|
+| greptile | `mcp__plugin_greptile_greptile__search_greptile_comments` | Semantic codebase search, find data workflow paths |
+| serena | `mcp__plugin_serena_serena__find_symbol`, `mcp__plugin_serena_serena__find_referencing_symbols` | Symbol-level code analysis, track function calls |
+| memory | `mcp__memory__create_entities`, `mcp__memory__search_nodes` | Remember analysis results for later use |
+| git | `Bash(git blame:*)`, `Bash(git log:*)` | View code history and change records |
 
 ### 1. Frontend Analysis
 
-- **Source Files**（必須標明）:
+- **Source Files** (must be specified):
   - Component: `{path}/xxx.component.ts`
   - Service: `{path}/xxx.service.ts`
-  - Model: `{path}/xxx.model.ts`（若有）
-- **Intention**: component 的主要功能/目的
-- **Request Paths**: service method + API 路徑對應表
-- **UI Elements**: 與功能相關的 UI component
+  - Model: `{path}/xxx.model.ts` (if applicable)
+- **Intention**: Main functionality/purpose of component
+- **Request Paths**: Service method + API path mapping table
+- **UI Elements**: UI components related to functionality
 
 ### 2. Backend Analysis
 
-- **Source Files**（必須標明）:
+- **Source Files** (must be specified):
   - Route: `gateway-server/routes/xxx.js`
-  - Handler: `gateway-server/model/xxx.js`（若有）
-  - Middleware: `gateway-server/model/xxx.js`（若有）
+  - Handler: `gateway-server/model/xxx.js` (if applicable)
+  - Middleware: `gateway-server/model/xxx.js` (if applicable)
 - **API Endpoints**: file:line number
 - **DB Schema**: table name + columns
-- **Data Workflow（完整追蹤）**:
+- **Data Workflow** (complete tracing):
   ```
-  MQTT 取值 → file:line
+  MQTT data retrieval → file:line
       ↓
-  dispatch 處理 → file:line
+  Dispatch processing → file:line
       ↓
-  cache 存取 → file:line
+  Cache access → file:line
       ↓
-  storage 計算 → file:line
+  Storage calculation → file:line
       ↓
-  IPC 回傳 → file:line
+  IPC return → file:line
       ↓
-  handler 處理 → file:line
+  Handler processing → file:line
       ↓
   DB insert → file:line
   ```
 
 ### 3. Requirement Phases
 
-每個 Phase 包含需求說明和程式碼變更：
+Each Phase contains requirement description and code changes:
 
 ```markdown
-### 🟣 Phase N: 標題
+### 🟣 Phase N: Title
 
-**Requirement**: 具體需求
+**Requirement**: Specific requirement
 
 **Modification Context**:
-- **為什麼改**：[原因]
-- **怎麼改**：[方法]
-- **影響範圍**：[範圍]
+- **Why change**: [Reason]
+- **How to change**: [Method]
+- **Impact scope**: [Scope]
 
-**程式碼變更**：
-[程式碼區塊]
+**Code Changes**:
+[Code block]
 ```
 
-### 4. Implementation Steps（獨立區塊）
+### 4. Implementation Steps (independent section)
 
-所有 Phase 的修改項目彙整成 checkbox 清單：
+Consolidate all Phase modifications into checkbox list:
 
 ```markdown
 ## 🟣 Implementation Steps
 
-- [ ] 修改 `{file:line}` - {簡短描述}
-- [ ] 修改 `{file:line}` - {簡短描述}
+- [ ] Modify `{file:line}` - {Brief description}
+- [ ] Modify `{file:line}` - {Brief description}
 ```
 
-## 完成後提示
+## Completion Message
 
 ```
-Spec 已建立於 {path}/spec.md
+Spec created at {path}/spec.md
 
-建議執行 /spec review {path} 審查 spec 內容。
-```
-
----
-
-# 子指令 2: review
-
-## 輸入
-
-```
-/spec review [spec 資料夾路徑]
-```
-
-## 核心原則
-
-**直接修正，不只報告問題。**
-
-發現問題時立即修正 spec 檔案，而非只列出問題清單詢問用戶是否修正。
-
-## 審查重點（spec 內容本身）
-
-### 1. 格式完整性
-
-| 檢查項目 | 通過標準 |
-|---------|---------|
-| Index 目錄 | 存在且與標題同步 |
-| 標題 Emoji | 所有主要區塊都有正確的 Emoji（🔵🟢🟣🟡🟠📄） |
-| 相關文件區塊 | 存在且列出所有涉及的檔案 |
-
-### 2. Analysis 完整性（根據 spec 類型）
-
-**判斷 spec 類型後，只檢查存在的區塊：**
-
-| Spec 類型 | 檢查項目 |
-|----------|---------|
-| 純 Frontend | Frontend Analysis 完整（intention、UI elements） |
-| 純 Backend | Backend Analysis 完整（API endpoints、DB schema、Data Workflow） |
-| Full-stack | 兩者都檢查 |
-
-**注意：** 不存在的區塊不扣分，但存在的區塊必須完整。
-
-### 3. file:line 驗證
-
-- 使用 Read tool 檢查每個 file:line 是否真實存在
-- 確認該行程式碼與描述相符
-- 如果不存在，標記為 ❌
-
-### 4. Phase 結構完整性
-
-| 檢查項目 | 通過標準 |
-|---------|---------|
-| Requirement | 每個 Phase 有 `**Requirement**` |
-| Modification Context | 每個 Phase 有為什麼改、怎麼改、影響範圍 |
-| 程式碼變更 | 有具體的程式碼區塊（若適用） |
-
-### 5. Implementation Steps 可執行性
-
-| 檢查項目 | 通過標準 |
-|---------|---------|
-| 獨立區塊 | 存在 `## 🟣 Implementation Steps` 區塊 |
-| Checkbox 格式 | 使用 `- [ ]` 格式 |
-| file:line 參照 | 每個 checkbox 都有明確的 file:line |
-| 描述清晰 | 具體可執行（不是模糊描述） |
-
-## 執行流程
-
-### Step 1: 審查 + 自動修正
-
-發現以下問題時，**直接修改 spec.md**：
-
-| 問題類型 | 自動修正行為 |
-|---------|-------------|
-| 行號錯誤 | 用 Read tool 找到正確行號，直接更新 |
-| 變數命名不一致 | 依專案慣例修正 |
-| 缺少區塊 | 補全缺少的結構 |
-| 格式問題 | 直接格式化 |
-
-### Step 2: 無法自動修正的問題
-
-僅在以下情況詢問用戶：
-- 邏輯矛盾（需求不明確）
-- 找不到對應程式碼（可能需求已過時）
-
-## 完成後提示
-
-```
-Spec 審查並修正完成 ✅
-
-修正項目：
-- [具體修正 1]
-- [具體修正 2]
-
-可執行 /spec-impl run {path} 開始實作。
+Recommended: Run /spec review {path} to review spec content.
 ```
 
 ---
 
-# 子指令 3: update
+# Subcommand 2: review
 
-## 輸入
+## Input
 
 ```
-/spec update [spec 資料夾路徑]
+/spec review [spec folder path]
 ```
 
-**路徑範例：**
+## Core Principle
+
+**Fix directly, don't just report issues.**
+
+When problems are found, immediately fix the spec file instead of just listing issues and asking user confirmation.
+
+## Review Focus (spec content itself)
+
+### 1. Format Completeness
+
+| Check Item | Pass Standard |
+|----------|---|
+| Index directory | Exists and synced with titles |
+| Title Emoji | All main blocks have correct Emoji (🔵🟢🟣🟡🟠📄) |
+| Related files section | Exists and lists all involved files |
+
+### 2. Analysis Completeness (based on spec type)
+
+**After determining spec type, only check existing sections:**
+
+| Spec Type | Check Item |
+|-----------|---|
+| Frontend only | Frontend Analysis complete (intention, UI elements) |
+| Backend only | Backend Analysis complete (API endpoints, DB schema, Data Workflow) |
+| Full-stack | Check both |
+
+**Note:** Missing sections don't fail, but existing sections must be complete.
+
+### 3. file:line Verification
+
+- Use Read tool to check each file:line actually exists
+- Confirm code at that line matches description
+- Mark as ❌ if not found
+
+### 4. Phase Structure Completeness
+
+| Check Item | Pass Standard |
+|-----------|---|
+| Requirement | Each Phase has `**Requirement**` |
+| Modification Context | Each Phase has why/how/impact |
+| Code Changes | Has concrete code block (if applicable) |
+
+### 5. Implementation Steps Executability
+
+| Check Item | Pass Standard |
+|-----------|---|
+| Independent section | `## 🟣 Implementation Steps` section exists |
+| Checkbox format | Uses `- [ ]` format |
+| file:line reference | Each checkbox has explicit file:line |
+| Clear description | Concrete and executable (not vague) |
+
+## Execution Workflow
+
+### Step 1: Review + Auto-fix
+
+When issues found, **directly modify spec.md**:
+
+| Issue Type | Auto-fix Behavior |
+|-----------|---|
+| Wrong line numbers | Use Read tool to find correct line, update directly |
+| Inconsistent naming | Fix per project conventions |
+| Missing sections | Complete missing structure |
+| Format issues | Format directly |
+
+### Step 2: Issues that cannot auto-fix
+
+Only ask user in these cases:
+- Logic contradictions (requirement unclear)
+- Cannot find corresponding code (requirement may be outdated)
+
+## Completion Message
+
+```
+Spec reviewed and corrected ✅
+
+Corrections applied:
+- [Specific correction 1]
+- [Specific correction 2]
+
+Can run /spec-impl run {path} to start implementation.
+```
+
+---
+
+# Subcommand 3: update
+
+## Input
+
+```
+/spec update [spec folder path]
+```
+
+**Path examples:**
 - `be/notes/spec/data-correction`
 - `be/notes/spec/energy-meter-setting`
 
-**自動偵測：** 若用戶在 IDE 開啟了 spec 檔案，自動使用該路徑。
+**Auto-detect:** If user has spec file open in IDE, automatically use that path.
 
-## 執行流程（全自動）
+## Execution Workflow (fully automatic)
 
-**重要：不詢問用戶，直接執行完整格式化流程。**
+**Important: Don't ask user, directly execute complete formatting process.**
 
-### Step 1: 讀取現有 Spec
+### Step 1: Read Existing Spec
 
 ```
-讀取 {spec-folder}/spec.md 或 {spec-folder}/spec_v*.md
+Read {spec-folder}/spec.md or {spec-folder}/spec_v*.md
 ```
 
-### Step 2: 分析現有內容結構
+### Step 2: Analyze Existing Content Structure
 
-識別現有區塊：
-- 有哪些標題/區塊？
-- 哪些區塊缺少 Emoji？
-- 是否有 Index 目錄？
-- 是否有「相關文件」區塊？
-- **Phase 結構是否完整？** 每個 Phase 應包含：
-  - `**Requirement**`: 具體需求
-  - `**Modification Context**`: 為什麼改、怎麼改、影響範圍
-- **是否有獨立的 Implementation Steps 區塊？** checkbox 格式的可執行項目
-- **判斷 Spec 類型：**
-  - **純 Frontend**：只有 Frontend Analysis、沒有 Backend → 不補 Backend 區塊
-  - **純 Backend**：只有 Backend Analysis → 不補 Frontend 區塊
-  - **Full-stack**：兩者都有 → 保持完整
+Identify existing sections:
+- What titles/sections exist?
+- Which sections are missing Emoji?
+- Does Index directory exist?
+- Does "Related Files" section exist?
+- **Is Phase structure complete?** Each Phase should have:
+  - `**Requirement**`: Specific requirement
+  - `**Modification Context**`: Why/How/Impact
+- **Is there independent Implementation Steps section?** Executable checkbox items
+- **Determine Spec type:**
+  - **Frontend only**: Only Frontend Analysis, no Backend → Don't add Backend section
+  - **Backend only**: Only Backend Analysis → Don't add Frontend section
+  - **Full-stack**: Both exist → Keep complete
 
-**可選區塊原則：** 不強制補全不存在的大區塊（Frontend/Backend Analysis），但必須補全已存在區塊的子結構。
+**Optional section principle:** Don't force complete large sections (Frontend/Backend Analysis) that don't exist, but must complete sub-structure of existing sections.
 
-### Step 3: 自動格式化（全部執行）
+### Step 3: Auto-format (execute all)
 
-#### 3.1 轉換標題格式
+#### 3.1 Convert Title Format
 
-將所有標題轉換為帶 Emoji 的格式：
+Convert all titles to Emoji format:
 
-| 關鍵字匹配 | Emoji | 轉換結果 |
-|-----------|-------|---------|
-| Frontend / 前端 / 驗證規則 / FormControl | 🔵 | `## 🔵 Frontend Analysis` |
-| Backend / 後端 | 🟢 | `## 🟢 Backend Analysis` |
-| Requirement / 需求 / Phase | 🟣 | `## 🟣 Requirement Phases` |
-| Implementation / 實現 / 步驟 | 🟣 | `## 🟣 Implementation Steps` |
-| 效果 / Result / Effect | 🟡 | `## 🟡 效果` |
-| 資料結構 / Data Structure / Schema | 🟡 | `## 🟡 ...` |
-| 測試 / Test | 🟠 | `## 🟠 測試` |
-| 相關文件 / Related Files | 📄 | `## 📄 相關文件` |
+| Keyword Match | Emoji | Result |
+|---|---|---|
+| Frontend / Validation Rules / FormControl | 🔵 | `## 🔵 Frontend Analysis` |
+| Backend | 🟢 | `## 🟢 Backend Analysis` |
+| Requirement / Phase | 🟣 | `## 🟣 Requirement Phases` |
+| Implementation | 🟣 | `## 🟣 Implementation Steps` |
+| Effect / Result | 🟡 | `## 🟡 Effect` |
+| Data Structure / Schema | 🟡 | `## 🟡 ...` |
+| Test | 🟠 | `## 🟠 Test` |
+| Related Files | 📄 | `## 📄 Related Files` |
 
-**子標題規則：** 使用與父標題相同顏色
+**Subtitle rule:** Use same color as parent title
 
 ```markdown
 ## 🟣 Requirement Phases
-### 🟣 Phase 1: 名稱長度限制    ← 同色
-### 🟣 Implementation Steps      ← 同色
+### 🟣 Phase 1: Name length limit    ← Same color
+### 🟣 Implementation Steps          ← Same color
 ```
 
-#### 3.2 生成 Index 目錄
+#### 3.2 Generate Index Directory
 
-根據轉換後的標題，自動生成可點擊的目錄：
+Auto-generate clickable index based on converted titles:
 
 ```markdown
 ## 📑 Index
@@ -305,133 +305,133 @@ Spec 審查並修正完成 ✅
 - [🔵 Frontend Analysis](#-frontend-analysis)
 - [🟢 Backend Analysis](#-backend-analysis)
 - [🟣 Requirement Phases](#-requirement-phases)
-  - [Phase 1: 名稱長度限制](#phase-1-名稱長度限制)
-- [📄 相關文件](#-相關文件)
+  - [Phase 1: Name length limit](#phase-1-name-length-limit)
+- [📄 Related Files](#-related-files)
 ```
 
-#### 3.3 補全「相關文件」區塊
+#### 3.3 Complete Related Files Section
 
-從 spec 內容中提取所有檔案路徑，生成：
+Extract all file paths from spec content and generate:
 
 ```markdown
-## 📄 相關文件
+## 📄 Related Files
 
 **Frontend:**
-- Component: `{提取的 .component.ts 路徑}`
-- Template: `{提取的 .component.html 路徑}`
+- Component: `{extracted .component.ts path}`
+- Template: `{extracted .component.html path}`
 
 **Backend:**
-- Route: `{提取的 routes/*.js 路徑}`
+- Route: `{extracted routes/*.js path}`
 
 **i18n:**
 - `gateway-server-frontend/src/assets/i18n/*.json`
 ```
 
-#### 3.4 補全 Phase 結構
+#### 3.4 Complete Phase Structure
 
-檢查每個 `### Phase N:` 區塊，若缺少以下內容則補全：
+Check each `### Phase N:` section, complete if missing:
 
 ```markdown
-### 🟣 Phase N: 標題
+### 🟣 Phase N: Title
 
-**Requirement**: [從現有內容推斷或標記為待填寫]
+**Requirement**: [Infer from existing or mark as TBD]
 
 **Modification Context**:
-- **為什麼改**：[推斷或待填寫]
-- **怎麼改**：[推斷或待填寫]
-- **影響範圍**：[推斷或待填寫]
+- **Why change**: [Infer or TBD]
+- **How to change**: [Infer or TBD]
+- **Impact scope**: [Infer or TBD]
 
-**程式碼變更**：
-[保留現有的程式碼區塊]
+**Code Changes**:
+[Preserve existing code block]
 ```
 
-#### 3.5 生成 Implementation Steps 區塊
+#### 3.5 Generate Implementation Steps Section
 
-從所有 Phase 中提取修改項目，生成獨立的 checkbox 清單：
+Extract modifications from all Phases, generate independent checkbox list:
 
 ```markdown
 ## 🟣 Implementation Steps
 
-- [ ] 修改 `{file:line}` - {簡短描述}
-- [ ] 修改 `{file:line}` - {簡短描述}
+- [ ] Modify `{file:line}` - {Brief description}
+- [ ] Modify `{file:line}` - {Brief description}
 ```
 
-**提取規則：**
-- 從 `**檔案**：` 或程式碼註解中提取 file:line
-- 從 Phase 標題或 Requirement 提取描述
-- 每個修改點一個 checkbox
+**Extraction rules:**
+- Extract file:line from `**File**:` or code comments
+- Extract description from Phase title or Requirement
+- One checkbox per modification point
 
-#### 3.6 驗證 file:line 參照
+#### 3.6 Verify file:line References
 
-使用 Read tool 驗證所有 `file:line` 格式的參照：
+Use Read tool to verify all `file:line` format references:
 
 ```
-🔍 驗證 file:line 參照...
+🔍 Verifying file:line references...
 
 ✅ equipment-group-setting.component.ts:54
 ✅ equipment-group-setting.component.html:26
-❌ equipment-group-setting.component.ts:999（行號超出檔案範圍）
+❌ equipment-group-setting.component.ts:999 (line number out of range)
 ```
 
-**驗證失敗處理：**
-- 嘗試在檔案中搜尋相關程式碼
-- 找到正確行號後自動修正
-- 找不到則標記為 `❓ 待確認`
+**Verification failure handling:**
+- Attempt to search for relevant code in file
+- Auto-correct when correct line found
+- Mark as `❓ Needs confirmation` if not found
 
-#### 3.7 格式一致性檢查
+#### 3.7 Format Consistency Check
 
-- [ ] 表格格式對齊
-- [ ] 程式碼區塊語言標記正確
-- [ ] file:line 格式統一（完整路徑:行號）
-- [ ] 每個 Phase 都有 Requirement + Modification Context
-- [ ] Implementation Steps 區塊存在且為 checkbox 格式
+- [ ] Table format alignment
+- [ ] Code block language tags correct
+- [ ] file:line format unified (full path:line number)
+- [ ] Each Phase has Requirement + Modification Context
+- [ ] Implementation Steps section exists and uses checkbox format
 
-### Step 4: 輸出更新後的 Spec
+### Step 4: Output Updated Spec
 
-**檔名規則：**
-- 讀取 `spec.md` → 輸出覆蓋 `spec.md`
-- 讀取 `spec_v2.md` → 輸出覆蓋 `spec_v2.md`（保持原檔名）
-- 不建立 `.bak` 備份（用 git 管理版本）
+**Filename rules:**
+- Read `spec.md` → Output overwrites `spec.md`
+- Read `spec_v2.md` → Output overwrites `spec_v2.md` (maintain original filename)
+- Don't create `.bak` backup (use git for version management)
 
-## 完成後輸出
+## Completion Output
 
 ```
-Spec 格式化完成 ✅
+Spec formatting complete ✅
 
-📝 修改摘要：
-- 新增 Index 目錄
-- 標題加入 Emoji（🔵🟢🟣📄）
-- 補全 Phase 結構（Requirement + Modification Context）
-- 生成 Implementation Steps 區塊（N 個 checkbox）
-- 補全「相關文件」區塊
-- 驗證 N 個 file:line 參照（N ✅ / N ❌）
+📝 Change Summary:
+- Added Index directory
+- Added Emoji to titles (🔵🟢🟣📄)
+- Completed Phase structure (Requirement + Modification Context)
+- Generated Implementation Steps section (N checkboxes)
+- Completed Related Files section
+- Verified N file:line references (N ✅ / N ❌)
 
-📄 輸出檔案：{path}/spec.md
+📄 Output file: {path}/spec.md
 
-建議執行 /spec review {path} 確認完整性。
+Recommended: Run /spec review {path} to verify completeness.
 ```
 
 ---
 
-## 輸出格式範例
+## Output Format Example
 
-參考 [references/spec-output-format.md](references/spec-output-format.md)
-
----
-
-## 注意事項
-
-1. **Data workflow 必須完整** - 不能有斷點，每一步都要有 file:line
-2. **file:line 驗證必須實際執行** - 用 Read tool 確認存在
-3. **Implementation steps 要具體** - 不是模糊描述，而是可執行的項目
+Reference [references/spec-output-format.md](references/spec-output-format.md)
 
 ---
 
-## Spec 格式規範
+## Notes
 
-### 1. 📑 Index 目錄（必須）
+1. **Data workflow must be complete** - No gaps, each step must have file:line
+2. **file:line verification must execute** - Use Read tool to confirm existence
+3. **Implementation steps must be concrete** - Not vague, executable items
 
-Spec 開頭必須包含可點擊的目錄索引：
+---
+
+## Spec Format Standards
+
+### 1. 📑 Index Directory (required)
+
+Spec beginning must contain clickable index:
 
 ```markdown
 ## 📑 Index
@@ -447,39 +447,39 @@ Spec 開頭必須包含可點擊的目錄索引：
   - [DB Schema](#-db-schema)
   - [Data Workflow](#-data-workflow)
 - [🟣 Requirement Phases](#-requirement-phases)
-- [📄 相關文件](#-相關文件)
+- [📄 Related Files](#-related-files)
 ```
 
-### 2. 標題顏色 Emoji（必須）
+### 2. Title Color Emoji (required)
 
-使用純色圓球區分不同區塊，提升可讀性：
+Use solid color circles to distinguish sections and improve readability:
 
-| 區塊 | Emoji | 範例 |
-|------|-------|------|
-| Frontend / 驗證規則 | 🔵 | `## 🔵 Frontend Analysis` |
+| Section | Emoji | Example |
+|---------|-------|---------|
+| Frontend / Validation Rules | 🔵 | `## 🔵 Frontend Analysis` |
 | Backend | 🟢 | `## 🟢 Backend Analysis` |
-| 效果 / 資料結構 | 🟡 | `## 🟡 效果` |
+| Effect / Data Structure | 🟡 | `## 🟡 Effect` |
 | Requirement / Implementation | 🟣 | `## 🟣 Requirement Phases` |
-| 測試 | 🟠 | `## 🟠 測試` |
-| 相關文件 | 📄 | `## 📄 相關文件` |
+| Test | 🟠 | `## 🟠 Test` |
+| Related Files | 📄 | `## 📄 Related Files` |
 
-**子標題規則**：使用與父標題相同顏色
+**Subtitle rule**: Use same color as parent title
 
 ```markdown
 ## 🟢 Backend Analysis
-### 🟢 API Endpoints      ← 同色
-### 🟢 DB Schema          ← 同色
-### 🟢 Data Workflow      ← 同色
+### 🟢 API Endpoints      ← Same color
+### 🟢 DB Schema          ← Same color
+### 🟢 Data Workflow      ← Same color
 ```
 
-**可用純色圓球**：🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪
+**Available solid circles**: 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪
 
-### 3. 📄 相關文件區塊（必須）
+### 3. 📄 Related Files Section (required)
 
-每份 spec 結尾必須包含「相關文件」區塊，列出所有涉及的檔案路徑：
+Every spec must end with Related Files section listing all involved file paths:
 
 ```markdown
-## 📄 相關文件
+## 📄 Related Files
 
 **Frontend:**
 - Component: `gateway-server-frontend/src/app/{module}/{component}.component.ts`
@@ -493,9 +493,9 @@ Spec 開頭必須包含可點擊的目錄索引：
 - Middleware: `gateway-server/model/{middleware}.js`
 ```
 
-**用途：**
-- ✅ 讓後續閱讀者快速定位程式碼
-- ✅ 方便 IDE 點擊跳轉
-- ✅ 明確定義修改範圍
+**Purpose:**
+- ✅ Helps subsequent readers quickly locate code
+- ✅ Convenient IDE click navigation
+- ✅ Clearly defines modification scope
 
 $ARGUMENTS
