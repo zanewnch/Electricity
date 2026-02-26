@@ -1,6 +1,6 @@
 ---
 name: impl
-description: Implementation document management. Use when user wants to create an impl, review/check an impl, update/revise/fix an impl, or says things like "create impl", "help me create the impl for", "analyze feature", "review impl", "it is wrong help me revise", "I think it is better for xxx", "help me change the impl".
+description: Implementation document management. Use when user wants to create an impl, review/check an impl, update/revise/fix an impl, run/execute an impl, or says things like "create impl", "help me create the impl for", "analyze feature", "review impl", "it is wrong help me revise", "I think it is better for xxx", "help me change the impl", "run impl", "execute impl".
 disable-model-invocation: false
 user-invocable: true
 model: opus
@@ -16,7 +16,8 @@ Determine which workflow to execute based on the user's natural language:
 |----------------------------|----------|
 | "create impl", "analyze feature", "make an impl for" | [Create](configs/create-workflow.md) |
 | "review impl", "check the impl", "is it correct", "verify" | [Review](configs/review-workflow.md) |
-| "update impl", "revise", "it is wrong", "change", "fix the impl", "I think it is better for xxx" | [Update](configs/update-workflow.md) |
+| "update impl", "revise", "revise impl", "help me revise", "it is wrong", "change", "fix the impl", "I think it is better for xxx" | [Update](configs/update-workflow.md) |
+| "run impl", "execute impl", "implement it", "start coding", "run the steps" | [Run](configs/run-workflow.md) |
 
 If intent is unclear, ask the user which workflow they need.
 

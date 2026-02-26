@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Shared.Data;
+using Backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,13 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Seed dummy data on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<MqttDbContext>();
+    await SensorDataSeeder.SeedAsync(db);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
