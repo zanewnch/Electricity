@@ -254,5 +254,5 @@
   "claude.input.submitKey": "Enter",
   "workbench.auxiliaryActivityBar.location": "default",
   "claudeCode.selectedModel": "default",
-  "editor.fontFamily": "monospace"
+  "editor.fontFamily": "JetBrains Mono"
 }

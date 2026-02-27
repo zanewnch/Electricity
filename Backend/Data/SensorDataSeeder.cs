@@ -8,11 +8,19 @@ using Shared.Models;
 
 namespace Backend.Data;
 
+/// <summary>
+/// Seeds dummy sensor data into the database for development and testing.
+/// </summary>
 public static class SensorDataSeeder
 {
     private const int TargetCount = 100_000;
     private const int BatchSize = 1_000;
 
+    /// <summary>
+    /// Seeds up to 100,000 dummy sensor records if not already present.
+    /// </summary>
+    /// <param name="db">The database context to seed data into.</param>
+    /// <returns>A task representing the asynchronous seed operation.</returns>
     public static async Task SeedAsync(MqttDbContext db)
     {
         var existingCount = await db.SensorData.CountAsync();

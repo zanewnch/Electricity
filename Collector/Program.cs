@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+#pragma warning disable SA1516
+
 using Collector.Services;
 using Microsoft.EntityFrameworkCore;
 using Shared.Data;

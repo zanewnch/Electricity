@@ -17,6 +17,10 @@ namespace Shared.Data;
 /// </summary>
 public class MqttDbContext : DbContext
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MqttDbContext"/> class.
+    /// </summary>
+    /// <param name="options">The DbContext configuration options.</param>
     public MqttDbContext(DbContextOptions<MqttDbContext> options)
         : base(options)
     {

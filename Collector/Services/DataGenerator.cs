@@ -7,12 +7,19 @@ using Shared.Models;
 
 namespace Collector.Services;
 
+/// <summary>
+/// Generates simulated sensor data readings for development and testing.
+/// </summary>
 public class DataGenerator
 {
     private static readonly JsonSerializerOptions JsonOptions = new () { WriteIndented = true };
 
     private readonly Random random = new ();
 
+    /// <summary>
+    /// Generates one EnergyMeter and one Modbus sensor reading with randomized values.
+    /// </summary>
+    /// <returns>A list containing two <see cref="SensorData"/> readings.</returns>
     public List<SensorData> Generate()
     {
         var readings = new List<SensorData>();
@@ -50,6 +57,10 @@ public class DataGenerator
         return readings;
     }
 
+    /// <summary>
+    /// Prints sensor readings as JSON to the console.
+    /// </summary>
+    /// <param name="readings">The list of sensor readings to print.</param>
     public void PrintReadings(List<SensorData> readings)
     {
         foreach (var reading in readings)
