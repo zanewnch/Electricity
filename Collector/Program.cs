@@ -1,5 +1,9 @@
-using Microsoft.EntityFrameworkCore;
+// <copyright file="Program.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using Collector.Services;
+using Microsoft.EntityFrameworkCore;
 using Shared.Data;
 
 var connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=MqttDb;Trusted_Connection=true;TrustServerCertificate=true;";

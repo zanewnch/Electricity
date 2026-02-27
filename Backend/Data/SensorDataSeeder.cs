@@ -1,3 +1,8 @@
+// <copyright file="SensorDataSeeder.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+using Microsoft.EntityFrameworkCore;
 using Shared.Data;
 using Shared.Models;
 
@@ -36,7 +41,7 @@ public static class SensorDataSeeder
                 if ((i + j) % 2 == 0)
                 {
                     var c = Math.Round(random.NextDouble() * 100, 2);
-                    var v = Math.Round(218 + random.NextDouble() * 4, 2);
+                    var v = Math.Round(218 + (random.NextDouble() * 4), 2);
                     batch.Add(new SensorData
                     {
                         DeviceType = "EnergyMeter",
@@ -44,9 +49,9 @@ public static class SensorDataSeeder
                         Current = c,
                         Voltage = v,
                         Watt = Math.Round(c * v, 2),
-                        PowerFactor = Math.Round(0.85 + random.NextDouble() * 0.14, 2),
-                        Frequency = Math.Round(59.9 + random.NextDouble() * 0.2, 2),
-                        Timestamp = baseTime.AddSeconds(random.Next(totalSeconds))
+                        PowerFactor = Math.Round(0.85 + (random.NextDouble() * 0.14), 2),
+                        Frequency = Math.Round(59.9 + (random.NextDouble() * 0.2), 2),
+                        Timestamp = baseTime.AddSeconds(random.Next(totalSeconds)),
                     });
                 }
                 else
@@ -62,7 +67,7 @@ public static class SensorDataSeeder
                         Watt = Math.Round(c * v, 2),
                         PowerFactor = null,
                         Frequency = null,
-                        Timestamp = baseTime.AddSeconds(random.Next(totalSeconds))
+                        Timestamp = baseTime.AddSeconds(random.Next(totalSeconds)),
                     });
                 }
             }

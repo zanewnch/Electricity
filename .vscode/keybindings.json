@@ -1,0 +1,220 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+i",
+        "command": "composerMode.agent"
+    },
+    {
+        "key": "shift+enter",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\\\r\n"
+        },
+        "when": "terminalFocus"
+    },
+
+    {
+        "key": "shift shift",
+        "command": "workbench.action.quickOpen"
+    },
+    {
+        "key": "ctrl+shift+z",
+        "command": "-redo"
+    },
+    {
+        "key": "ctrl+shift+x",
+        "command": "editor.action.goToReferences",
+        "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
+    },
+    {
+        "key": "shift+f12",
+        "command": "-editor.action.goToReferences",
+        "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
+    },
+    {
+        "key": "ctrl+shift+x",
+        "command": "-workbench.view.extensions",
+        "when": "viewContainer.workbench.view.extensions.enabled"
+    },
+    {
+        "key": "ctrl+shift+c",
+        "command": "editor.action.revealDefinition",
+        "when": "editorHasDefinitionProvider && editorTextFocus"
+    },
+    {
+        "key": "f12",
+        "command": "-editor.action.revealDefinition",
+        "when": "editorHasDefinitionProvider && editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+z",
+        "command": "workbench.action.navigateBack",
+        "when": "canNavigateBack"
+    },
+    {
+        "key": "browserback",
+        "command": "-workbench.action.navigateBack",
+        "when": "canNavigateBack"
+    },
+    {
+        "key": "ctrl+shift+c",
+        "command": "-workbench.action.terminal.openNativeConsole",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+c",
+        "command": "-workbench.action.terminal.copySelection",
+        "when": "terminalTextSelectedInFocused || terminalFocus && terminalHasBeenCreated && terminalTextSelected || terminalFocus && terminalProcessSupported && terminalTextSelected || terminalFocus && terminalTextSelected && terminalTextSelectedInFocused || terminalHasBeenCreated && terminalTextSelected && terminalTextSelectedInFocused || terminalProcessSupported && terminalTextSelected && terminalTextSelectedInFocused"
+    },
+    {
+        "key": "ctrl+alt+/",
+        "command": "-workbench.command.prompts.use",
+        "when": "chatIsEnabled && config.chat.promptFiles"
+    },
+    {
+        "key": "ctrl+alt+/",
+        "command": "-cmdk.togglePromptBarModel",
+        "when": "editorHasPromptBar && editorPromptBarFocused"
+    },
+    {
+        "key": "ctrl+alt+/",
+        "command": "-composer.openModelToggle",
+        "when": "composerFocused && !editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+keyincomposition",
+        "command": "editor.action.blockComment",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "shift+alt+a",
+        "command": "-editor.action.blockComment",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+keyincomposition",
+        "command": "editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+/",
+        "command": "-editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+/",
+        "command": "editor.action.commentLine"
+    },
+    {
+        "key": "ctrl+alt+oem_2",
+        "command": "editor.action.blockComment"
+    },
+    {
+      "key": "ctrl+alt+l",
+      "command": "editor.action.formatDocument",
+      "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+    },
+    {
+      "key": "shift+alt+f",
+      "command": "-editor.action.formatDocument",
+      "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+    },
+    {
+      "key": "ctrl+alt+l",
+      "command": "prettier.forceFormatDocument"
+    },
+    {
+      "key": "ctrl+alt+l",
+      "command": "editor.action.formatDocument.none",
+      "when": "editorTextFocus && !editorHasDocumentFormattingProvider && !editorReadonly"
+    },
+    {
+      "key": "shift+alt+f",
+      "command": "-editor.action.formatDocument.none",
+      "when": "editorTextFocus && !editorHasDocumentFormattingProvider && !editorReadonly"
+    },
+    {
+      "key": "ctrl+alt+l",
+      "command": "notebook.formatCell",
+      "when": "editorHasDocumentFormattingProvider && editorTextFocus && inCompositeEditor && notebookEditable && !editorReadonly && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+      "key": "shift+alt+f",
+      "command": "-notebook.formatCell",
+      "when": "editorHasDocumentFormattingProvider && editorTextFocus && inCompositeEditor && notebookEditable && !editorReadonly && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+      "key": "ctrl+alt+l",
+      "command": "notebook.format",
+      "when": "notebookEditable && !editorTextFocus && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+      "key": "shift+alt+f",
+      "command": "-notebook.format",
+      "when": "notebookEditable && !editorTextFocus && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+      "key": "ctrl+alt+l",
+      "command": "sqltools.formatSql",
+      "when": "editorHasSelection && editorTextFocus && !config.sqltools.disableChordKeybindings && !editorReadonly"
+    },
+    {
+      "key": "ctrl+e ctrl+b",
+      "command": "-sqltools.formatSql",
+      "when": "editorHasSelection && editorTextFocus && !config.sqltools.disableChordKeybindings && !editorReadonly"
+    },
+    {
+      "key": "ctrl+shift+keyincomposition",
+      "command": "markdown.showPreviewToSide",
+      "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+    },
+    {
+      "key": "ctrl+k v",
+      "command": "-markdown.showPreviewToSide",
+      "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+    },
+    {
+      "key": "ctrl+shift+v",
+      "command": "-markdown-preview-enhanced.openPreview",
+      "when": "editorLangId == 'markdown'"
+    },
+    {
+      "key": "ctrl+shift+v",
+      "command": "markdown-preview-enhanced.openPreviewToTheSide",
+      "when": "editorLangId == 'markdown'"
+    },
+    {
+      "key": "ctrl+k v",
+      "command": "-markdown-preview-enhanced.openPreviewToTheSide",
+      "when": "editorLangId == 'markdown'"
+    },
+    {
+      "key": "ctrl+b",
+      "command": "-markdown.extension.editing.toggleBold",
+      "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+    },
+    {
+      "key": "ctrl+k ctrl+b",
+      "command": "-editor.action.setSelectionAnchor",
+      "when": "editorTextFocus"
+    },
+    {
+      "key": "ctrl+shift+b",
+      "command": "-workbench.action.tasks.build",
+      "when": "taskCommandsRegistered"
+    },
+    {
+      "key": "ctrl+shift+g b",
+      "command": "-gitlens.toggleFileBlame:key",
+      "when": "editorTextFocus && config.gitlens.keymap == 'chorded' && resource in 'gitlens:tabs:blameable'"
+    },
+    {
+      "key": "ctrl+shift+g shift+b",
+      "command": "-gitlens.toggleCodeLens",
+      "when": "editorTextFocus && !gitlens:disabled && !gitlens:disabledToggleCodeLens && config.gitlens.keymap == 'chorded'"
+    },
+    {
+      "key": "ctrl+b",
+      "command": "workbench.action.toggleSidebarVisibility"
+    }
+]

@@ -1,0 +1,188 @@
+{
+  "version": "2.0.0",
+  "windows": {
+    "options": {
+      "shell": {
+        "executable": "cmd.exe",
+        "args": ["/d", "/c"]
+      }
+    }
+  },
+  "tasks": [
+    {
+      "label": "❌ Close All Terminals",
+      "command": "${command:workbench.action.terminal.killAll}",
+      "problemMatcher": []
+    },
+    {
+      "label": "🚀 Launch All (Claude + BE + FE + Tests)",
+      "dependsOn": [
+        "🤖 Start Claude CLI",
+        "🟢 Start Backend (gateway-server)",
+        "🔵 Start Frontend (gateway-server-frontend)",
+        "🧪 Backend Test (UI mode)",
+        "🧪 Frontend Test (UI mode)"
+      ],
+      "dependsOrder": "parallel",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "🤖 Start Claude CLI",
+      "type": "shell",
+      "command": "claude",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "🟢 Start Backend (gateway-server)",
+      "type": "shell",
+      "command": "cd gateway-server && npm start",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "🔵 Start Frontend (gateway-server-frontend)",
+      "type": "shell",
+      "command": "cd gateway-server-frontend && npm start",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "🚀 Start Backend & Frontend",
+      "dependsOn": [
+        "🟢 Start Backend (gateway-server)",
+        "🔵 Start Frontend (gateway-server-frontend)"
+      ],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "📦 Build Backend",
+      "type": "shell",
+      "command": "cd gateway-server && npm run build",
+      "problemMatcher": []
+    },
+    {
+      "label": "📦 Build Frontend",
+      "type": "shell",
+      "command": "cd gateway-server-frontend && npm run build",
+      "problemMatcher": []
+    },
+    {
+      "label": "🧪 Backend Test (UI mode)",
+      "type": "shell",
+      "command": "cd gateway-server && npm run test:ui",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "🧪 Backend Test (watch mode)",
+      "type": "shell",
+      "command": "cd gateway-server && npm test",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "🧪 Backend Test (run once)",
+      "type": "shell",
+      "command": "cd gateway-server && npm run test:run",
+      "problemMatcher": []
+    },
+    {
+      "label": "📊 Backend Test Coverage",
+      "type": "shell",
+      "command": "cd gateway-server && npm run test:coverage",
+      "problemMatcher": []
+    },
+    {
+      "label": "🧪 Frontend Test (UI mode)",
+      "type": "shell",
+      "command": "cd gateway-server-frontend && npm run test:ui",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "🧪 Frontend Test (Angular Karma)",
+      "type": "shell",
+      "command": "cd gateway-server-frontend && npm test",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "🧪 Frontend Test (run once)",
+      "type": "shell",
+      "command": "cd gateway-server-frontend && npm run test:web",
+      "problemMatcher": []
+    },
+    {
+      "label": "🧪 Test Backend & Frontend (run once)",
+      "dependsOn": [
+        "🧪 Backend Test (run once)",
+        "🧪 Frontend Test (run once)"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "🔍 Lint Backend",
+      "type": "shell",
+      "command": "cd gateway-server && npm run lint",
+      "problemMatcher": []
+    },
+    {
+      "label": "✨ Format Backend",
+      "type": "shell",
+      "command": "cd gateway-server && npm run format",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -7,8 +7,6 @@ yarn-error.log
 bin/
 obj/
 
-# VS Code
-.vscode/
 
 # Environment
 .env
@@ -19,5 +17,3 @@ obj/
 .DS_Store
 Thumbs.db
 
-# Claude
-.claude/settings.local.json

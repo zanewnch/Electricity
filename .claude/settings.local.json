@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(node --version:*)",
+      "Bash(npm --version:*)",
+      "Bash(dotnet --version:*)",
+      "Bash(winget:*)",
+      "Bash(\"/c/Program Files/dotnet/dotnet.exe\" --version)",
+      "Bash(npm create:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet run:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(sqllocaldb info:*)",
+      "Bash(\"/c/Program Files/Microsoft SQL Server/160/Tools/Binn/SqlLocalDB.exe\" info)",
+      "Bash(\"/c/Program Files/Microsoft SQL Server/150/Tools/Binn/SqlLocalDB.exe\" info)",
+      "Bash(\"/c/Program Files/Microsoft SQL Server/140/Tools/Binn/SqlLocalDB.exe\" info)",
+      "Bash(\"/c/Program Files/Microsoft SQL Server/150/Tools/Binn/SqlLocalDB.exe\" info MSSQLLocalDB)",
+      "Bash(\"/c/Program Files/Microsoft SQL Server/150/Tools/Binn/SqlLocalDB.exe\" create MSSQLLocalDB)",
+      "Bash(\"/c/Program Files/Microsoft SQL Server/150/Tools/Binn/SqlLocalDB.exe\" start MSSQLLocalDB)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet tool list:*)",
+      "Bash(dotnet tool install:*)",
+      "Bash(dotnet ef migrations:*)",
+      "Bash(dotnet ef database:*)",
+      "Bash(dotnet ef dbcontext:*)",
+      "Skill(spec)",
+      "Skill(spec:*)",
+      "Bash(powershell.exe -Command \"sqllocaldb info\")",
+      "Bash(head -1 RFC-*.md)",
+      "WebFetch(domain:claude.ai)",
+      "Bash(git mv shared _shared_tmp)",
+      "Bash(git mv _shared_tmp Shared)",
+      "Bash(dotnet format:*)",
+      "Bash(dotnet build:*)"
+    ]
+  }
+}
